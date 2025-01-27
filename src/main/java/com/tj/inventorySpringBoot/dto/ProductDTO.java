@@ -10,17 +10,17 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
     private String name;
     private String description;
-    private Double price;
-    private Integer quantity;
-    private String category;
+    private String size;  // e.g., "S", "M", "L", "XL"
+    private String color;
     private String brand;
-    private String imageUrl;
-    private boolean active;
+    private Double price;
+    private Long categoryId;  // Reference to the Category ID
+
+    // No `createdTime`, `updatedTime` fields
 
     public Long getId() {
         return id;
@@ -46,28 +46,20 @@ public class ProductDTO {
         this.description = description;
     }
 
-    public Double getPrice() {
-        return price;
+    public String getSize() {
+        return size;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setSize(String size) {
+        this.size = size;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public String getColor() {
+        return color;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public String getBrand() {
@@ -78,21 +70,21 @@ public class ProductDTO {
         this.brand = brand;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
-    public boolean isActive() {
-        return active;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
+
+    // Getters and setters
 }
-
-

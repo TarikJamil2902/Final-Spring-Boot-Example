@@ -2,34 +2,32 @@ package com.tj.inventorySpringBoot.entity;
 
 
 
+import com.tj.inventorySpringBoot.enums.OrderStatus;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String customerName;
+    private String customerContact;
 
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
+
     private Double totalAmount;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status; // e.g., PENDING, COMPLETED, CANCELLED
+
     private LocalDateTime orderDate;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
-
-    @Column(nullable = false, updatable = false)
     private LocalDateTime createdTime;
-
-    @Column(nullable = false)
     private LocalDateTime updatedTime;
 
     @PrePersist
@@ -43,7 +41,6 @@ public class Order {
         this.updatedTime = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -51,45 +48,5 @@ public class Order {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public Double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
-
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
-    }
+// Getters and setters
 }
-

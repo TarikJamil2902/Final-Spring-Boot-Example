@@ -3,16 +3,17 @@ package com.tj.inventorySpringBoot.dto;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class OrderDTO {
 
     private Long id;
     private String customerName;
+    private String customerContact;
+    private List<Long> orderItemIds;  // List of order item IDs instead of full `OrderItem` objects
     private Double totalAmount;
-    private LocalDateTime orderDate;
-    private String status;
+    private String status;  // Order status as a string (e.g., "PENDING", "COMPLETED", "CANCELLED")
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -29,20 +30,28 @@ public class OrderDTO {
         this.customerName = customerName;
     }
 
+    public String getCustomerContact() {
+        return customerContact;
+    }
+
+    public void setCustomerContact(String customerContact) {
+        this.customerContact = customerContact;
+    }
+
+    public List<Long> getOrderItemIds() {
+        return orderItemIds;
+    }
+
+    public void setOrderItemIds(List<Long> orderItemIds) {
+        this.orderItemIds = orderItemIds;
+    }
+
     public Double getTotalAmount() {
         return totalAmount;
     }
 
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
     }
 
     public String getStatus() {
@@ -52,5 +61,9 @@ public class OrderDTO {
     public void setStatus(String status) {
         this.status = status;
     }
+// No `orderDate`, `createdTime`, `updatedTime` fields
+
+    // Getters and setters
 }
+
 

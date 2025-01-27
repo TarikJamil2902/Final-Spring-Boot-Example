@@ -1,37 +1,22 @@
 package com.tj.inventorySpringBoot.entity;
+
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
-
-@Getter
-@Setter
-@ToString
 @Entity
-public class Product {
+public class Warehouse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    private String description;
-    private String size; // e.g., S, M, L, XL
-    private String color;
-    private String brand;
-    private Double price;
+    private String location;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @OneToMany(mappedBy = "product")
-    private List<Inventory> inventories; // Tracks stock in multiple locations
+    @OneToMany(mappedBy = "warehouse")
+    private List<Inventory> inventories;
 
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
@@ -63,52 +48,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getLocation() {
+        return location;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public List<Inventory> getInventories() {
@@ -137,3 +82,4 @@ public class Product {
 
     // Getters and setters
 }
+
