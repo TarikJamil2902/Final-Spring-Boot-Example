@@ -15,7 +15,7 @@ public class Supplier {
     private String contact;
     private String address;
 
-    @OneToMany(mappedBy = "supplier")
+    @OneToMany(mappedBy = "supplier") // The 'supplier' property in Product
     private List<Product> products;
 
     private LocalDateTime createdTime;
@@ -87,7 +87,4 @@ public class Supplier {
     public void setUpdatedTime(LocalDateTime updatedTime) {
         this.updatedTime = updatedTime;
     }
-
-    // Getters and setters
 }
-

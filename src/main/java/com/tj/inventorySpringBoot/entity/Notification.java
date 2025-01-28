@@ -65,11 +65,11 @@ public class Notification {
         this.type = type;
     }
 
-    public Boolean getRead() {
+    public Boolean getIsRead() {
         return isRead;
     }
 
-    public void setRead(Boolean read) {
+    public void setIsRead(Boolean read) {
         isRead = read;
     }
 
@@ -88,6 +88,7 @@ public class Notification {
     public void setUpdatedTime(LocalDateTime updatedTime) {
         this.updatedTime = updatedTime;
     }
+
 
     // Getters and setters
 }

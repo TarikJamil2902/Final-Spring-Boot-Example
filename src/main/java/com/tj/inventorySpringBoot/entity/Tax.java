@@ -15,8 +15,8 @@ public class Tax {
     private String name; // e.g., "GST", "VAT"
     private Double rate; // Tax rate percentage
 
-    @OneToMany(mappedBy = "tax")
-    private List<Order> orders; // Orders with this tax applied
+    @ManyToOne
+    private Order orders; // Orders with this tax applied
 
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
@@ -56,11 +56,11 @@ public class Tax {
         this.rate = rate;
     }
 
-    public List<Order> getOrders() {
+    public Order getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Order> orders) {
+    public void setOrders(Order orders) {
         this.orders = orders;
     }
 

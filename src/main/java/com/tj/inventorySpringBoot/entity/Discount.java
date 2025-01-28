@@ -16,7 +16,7 @@ public class Discount {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "discount")
+    @OneToMany(mappedBy = "discount") // Ensure this matches the property in the Order entity
     private List<Order> orders; // Orders where the discount was applied
 
     private LocalDateTime createdTime;
@@ -96,6 +96,4 @@ public class Discount {
     public void setUpdatedTime(LocalDateTime updatedTime) {
         this.updatedTime = updatedTime;
     }
-
-    // Getters and setters
 }

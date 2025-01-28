@@ -50,6 +50,14 @@ public class NotificationDTO {
         isRead = read;
     }
 
+    public Boolean getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
+    }
+
     // Getters and setters
 }
 

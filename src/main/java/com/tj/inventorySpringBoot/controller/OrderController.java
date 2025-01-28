@@ -16,35 +16,31 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    // Create a new order
+    // Endpoint to create or update an order
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
-        OrderDTO createdOrder = orderService.createOrder(orderDTO);
-        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+    public ResponseEntity<OrderDTO> createOrUpdateOrder(@RequestBody OrderDTO orderDTO) {
+        OrderDTO savedOrder = orderService.saveOrder(orderDTO);
+        return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
     }
 
-    // Get an order by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
-        OrderDTO order = orderService.getOrderById(id);
-        return new ResponseEntity<>(order, HttpStatus.OK);
-    }
-
-    // Get all orders
+    // Endpoint to get all orders
     @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<OrderDTO> orders = orderService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    // Update an order
-    @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
-        OrderDTO updatedOrder = orderService.updateOrder(id, orderDTO);
-        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+    // Endpoint to get an order by its ID
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
+        OrderDTO orderDTO = orderService.getOrderById(id);
+        if (orderDTO != null) {
+            return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Delete an order
+    // Endpoint to delete an order by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);

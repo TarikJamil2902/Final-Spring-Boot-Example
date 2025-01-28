@@ -21,17 +21,21 @@ public class Product {
 
     private String name;
     private String description;
-    private String size; // e.g., S, M, L, XL
+    private String size;
     private String color;
     private String brand;
     private Double price;
+
+    @ManyToOne
+    @JoinColumn(name = "supplier_id") // This column will be created in the Product table
+    private Supplier supplier; // This field will represent the relationship to Supplier
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "product")
-    private List<Inventory> inventories; // Tracks stock in multiple locations
+    private List<Inventory> inventories;
 
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
@@ -103,6 +107,14 @@ public class Product {
         this.price = price;
     }
 
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -134,6 +146,4 @@ public class Product {
     public void setUpdatedTime(LocalDateTime updatedTime) {
         this.updatedTime = updatedTime;
     }
-
-    // Getters and setters
 }
