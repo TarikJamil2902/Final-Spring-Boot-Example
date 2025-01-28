@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 @Transactional
 public class OrderService {
@@ -22,13 +23,33 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private OrderItemRepository orderItemRepository; // Assuming you have an OrderItemRepository to handle order items
+    private OrderItemRepository orderItemRepository;
 
-    // Method to create or update an order
-    public OrderDTO saveOrder(OrderDTO orderDTO) {
+    // Method to create a new order
+    public OrderDTO createOrder(OrderDTO orderDTO) {
         Order order = convertToEntity(orderDTO);
         Order savedOrder = orderRepository.save(order);
         return convertToDTO(savedOrder);
+    }
+
+    // Method to update an existing order
+    public OrderDTO updateOrder(Long id, OrderDTO orderDTO) {
+        Optional<Order> existingOrderOptional = orderRepository.findById(id);
+        if (existingOrderOptional.isPresent()) {
+            Order existingOrder = existingOrderOptional.get();
+            existingOrder.setCustomerName(orderDTO.getCustomerName());
+            existingOrder.setCustomerContact(orderDTO.getCustomerContact());
+            existingOrder.setTotalAmount(orderDTO.getTotalAmount());
+            existingOrder.setStatus(OrderStatus.valueOf(orderDTO.getStatus()));
+            // Update the order items
+            if (orderDTO.getOrderItemIds() != null) {
+                List<OrderItem> orderItems = orderItemRepository.findAllById(orderDTO.getOrderItemIds());
+                existingOrder.setOrderItems(orderItems);
+            }
+            orderRepository.save(existingOrder);
+            return convertToDTO(existingOrder);
+        }
+        return null;  // Handle as needed (e.g., return 404 or throw an exception)
     }
 
     // Method to get all orders
@@ -43,7 +64,7 @@ public class OrderService {
         if (orderOptional.isPresent()) {
             return convertToDTO(orderOptional.get());
         }
-        return null; // You can throw an exception here or return a 404 status in the controller
+        return null;
     }
 
     // Method to delete an order by its ID
@@ -58,9 +79,9 @@ public class OrderService {
         order.setCustomerName(orderDTO.getCustomerName());
         order.setCustomerContact(orderDTO.getCustomerContact());
         order.setTotalAmount(orderDTO.getTotalAmount());
-        order.setStatus(OrderStatus.valueOf(orderDTO.getStatus())); // Convert String status to Enum
+        order.setStatus(OrderStatus.valueOf(orderDTO.getStatus()));
 
-        // Map the orderItemIds to OrderItem objects (assumes that orderItems exist in DB)
+        // Map the orderItemIds to OrderItem objects
         if (orderDTO.getOrderItemIds() != null) {
             List<OrderItem> orderItems = orderItemRepository.findAllById(orderDTO.getOrderItemIds());
             order.setOrderItems(orderItems);
@@ -76,11 +97,11 @@ public class OrderService {
         orderDTO.setCustomerName(order.getCustomerName());
         orderDTO.setCustomerContact(order.getCustomerContact());
         orderDTO.setTotalAmount(order.getTotalAmount());
-        orderDTO.setStatus(order.getStatus().name()); // Convert Enum to String
+        orderDTO.setStatus(order.getStatus().name());
 
         // Get the order item IDs for the DTO
         List<Long> orderItemIds = order.getOrderItems().stream()
-                .map(OrderItem::getId)  // Assuming you have an OrderItem entity with an ID
+                .map(OrderItem::getId)
                 .collect(Collectors.toList());
         orderDTO.setOrderItemIds(orderItemIds);
 

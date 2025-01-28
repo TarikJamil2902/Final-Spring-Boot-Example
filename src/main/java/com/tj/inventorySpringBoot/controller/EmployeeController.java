@@ -16,10 +16,10 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    // Endpoint to create or update an employee
+    // Endpoint to create a new employee
     @PostMapping
-    public ResponseEntity<EmployeeDTO> createOrUpdateEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        EmployeeDTO savedEmployee = employeeService.saveEmployee(employeeDTO);
+    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO savedEmployee = employeeService.createEmployee(employeeDTO);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
@@ -37,14 +37,23 @@ public class EmployeeController {
         if (employeeDTO != null) {
             return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Return 404 if employee not found
+    }
+
+    // Endpoint to update an existing employee
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
+        if (updatedEmployee != null) {
+            return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Return 404 if employee not found
     }
 
     // Endpoint to delete an employee by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // Return 204 No Content for successful deletion
     }
 }
-

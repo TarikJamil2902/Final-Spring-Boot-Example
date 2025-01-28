@@ -24,16 +24,40 @@ public class PurchaseOrderService {
     private PurchaseOrderRepository purchaseOrderRepository;
 
     @Autowired
-    private SupplierRepository supplierRepository; // Assuming Supplier repository is available
+    private SupplierRepository supplierRepository;
 
     @Autowired
-    private PurchaseOrderItemRepository purchaseOrderItemRepository; // Assuming PurchaseOrderItem repository is available
+    private PurchaseOrderItemRepository purchaseOrderItemRepository;
 
-    // Save or update a purchase order
-    public PurchaseOrderDTO savePurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) {
+    // Create a new purchase order
+    public PurchaseOrderDTO createPurchaseOrder(PurchaseOrderDTO purchaseOrderDTO) {
         PurchaseOrder purchaseOrder = convertToEntity(purchaseOrderDTO);
         PurchaseOrder savedPurchaseOrder = purchaseOrderRepository.save(purchaseOrder);
         return convertToDTO(savedPurchaseOrder);
+    }
+
+    // Update an existing purchase order
+    public PurchaseOrderDTO updatePurchaseOrder(Long id, PurchaseOrderDTO purchaseOrderDTO) {
+        Optional<PurchaseOrder> existingPurchaseOrderOptional = purchaseOrderRepository.findById(id);
+        if (existingPurchaseOrderOptional.isPresent()) {
+            PurchaseOrder existingPurchaseOrder = existingPurchaseOrderOptional.get();
+
+            // Update fields
+            existingPurchaseOrder.setTotalCost(purchaseOrderDTO.getTotalCost());
+            existingPurchaseOrder.setStatus(PurchaseOrderStatus.valueOf(purchaseOrderDTO.getStatus()));
+
+            // Update Supplier
+            Supplier supplier = supplierRepository.findById(purchaseOrderDTO.getSupplierId()).orElse(null);
+            existingPurchaseOrder.setSupplier(supplier);
+
+            // Update PurchaseOrderItems
+            List<PurchaseOrderItem> purchaseOrderItems = purchaseOrderItemRepository.findAllById(purchaseOrderDTO.getPurchaseOrderItemIds());
+            existingPurchaseOrder.setPurchaseOrderItems(purchaseOrderItems);
+
+            PurchaseOrder updatedPurchaseOrder = purchaseOrderRepository.save(existingPurchaseOrder);
+            return convertToDTO(updatedPurchaseOrder);
+        }
+        return null; // Return null or throw an exception if not found
     }
 
     // Get all purchase orders
@@ -48,7 +72,7 @@ public class PurchaseOrderService {
         if (purchaseOrderOptional.isPresent()) {
             return convertToDTO(purchaseOrderOptional.get());
         }
-        return null; // You can throw an exception or return 404 in the controller
+        return null; // Return null or throw an exception if not found
     }
 
     // Delete a purchase order by its ID
@@ -63,7 +87,7 @@ public class PurchaseOrderService {
         purchaseOrder.setTotalCost(purchaseOrderDTO.getTotalCost());
         purchaseOrder.setStatus(PurchaseOrderStatus.valueOf(purchaseOrderDTO.getStatus()));
 
-        // Set the Supplier
+        // Set Supplier
         Supplier supplier = supplierRepository.findById(purchaseOrderDTO.getSupplierId()).orElse(null);
         purchaseOrder.setSupplier(supplier);
 
@@ -89,7 +113,7 @@ public class PurchaseOrderService {
         // Set PurchaseOrderItem IDs
         if (purchaseOrder.getPurchaseOrderItems() != null) {
             List<Long> purchaseOrderItemIds = purchaseOrder.getPurchaseOrderItems().stream()
-                    .map(poi -> poi.getId())
+                    .map(PurchaseOrderItem::getId)
                     .collect(Collectors.toList());
             purchaseOrderDTO.setPurchaseOrderItemIds(purchaseOrderItemIds);
         }
@@ -97,4 +121,3 @@ public class PurchaseOrderService {
         return purchaseOrderDTO;
     }
 }
-

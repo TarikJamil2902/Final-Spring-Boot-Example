@@ -16,34 +16,44 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // Endpoint to create or update a product
+    // Endpoint to create a new product
     @PostMapping
-    public ResponseEntity<ProductDTO> createOrUpdateProduct(@RequestBody ProductDTO productDTO) {
-        ProductDTO savedProduct = productService.saveProduct(productDTO);
-        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
+        ProductDTO createdProduct = productService.createProduct(productDTO);
+        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    }
+
+    // Endpoint to update an existing product
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
+        if (updatedProduct != null) {
+            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Product not found
     }
 
     // Endpoint to get all products
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        List<ProductDTO> products = productService.getAllProducts();
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        List<ProductDTO> productDTOs = productService.getAllProducts();
+        return new ResponseEntity<>(productDTOs, HttpStatus.OK);
     }
 
-    // Endpoint to get a product by ID
+    // Endpoint to get a product by its ID
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         ProductDTO productDTO = productService.getProductById(id);
         if (productDTO != null) {
             return new ResponseEntity<>(productDTO, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Product not found
     }
 
-    // Endpoint to delete a product by ID
+    // Endpoint to delete a product by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // No content to return
     }
 }

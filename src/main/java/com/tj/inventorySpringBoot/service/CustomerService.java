@@ -23,11 +23,33 @@ public class CustomerService {
     @Autowired
     private UserRepository userRepository;  // To handle the relationship with User entity
 
-    // Method to create or update a customer
-    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
+    // Method to create a new customer
+    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
         Customer customer = convertToEntity(customerDTO);
         Customer savedCustomer = customerRepository.save(customer);
         return convertToDTO(savedCustomer);
+    }
+
+    // Method to update an existing customer
+    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
+        if (customerOptional.isPresent()) {
+            Customer customer = customerOptional.get();
+            customer.setName(customerDTO.getName());
+            customer.setEmail(customerDTO.getEmail());
+            customer.setPhoneNumber(customerDTO.getPhoneNumber());
+            customer.setAddress(customerDTO.getAddress());
+
+            // Update the user who created this customer if applicable
+            if (customerDTO.getCreatedByUserId() != null) {
+                Optional<User> createdByUser = userRepository.findById(customerDTO.getCreatedByUserId());
+                createdByUser.ifPresent(customer::setCreatedBy);  // Set the createdBy relationship if the user is found
+            }
+
+            Customer updatedCustomer = customerRepository.save(customer);
+            return convertToDTO(updatedCustomer);
+        }
+        return null;  // Handle this as a 404 in the controller or throw an exception
     }
 
     // Method to get all customers
@@ -83,4 +105,3 @@ public class CustomerService {
         return customerDTO;
     }
 }
-

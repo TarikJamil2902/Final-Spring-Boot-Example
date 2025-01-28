@@ -16,11 +16,21 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    // Endpoint to create or update a report
+    // Endpoint to create a new report
     @PostMapping
-    public ResponseEntity<ReportDTO> createOrUpdateReport(@RequestBody ReportDTO reportDTO) {
-        ReportDTO savedReport = reportService.saveReport(reportDTO);
-        return new ResponseEntity<>(savedReport, HttpStatus.CREATED);
+    public ResponseEntity<ReportDTO> createReport(@RequestBody ReportDTO reportDTO) {
+        ReportDTO createdReport = reportService.createReport(reportDTO);
+        return new ResponseEntity<>(createdReport, HttpStatus.CREATED);
+    }
+
+    // Endpoint to update an existing report
+    @PutMapping("/{id}")
+    public ResponseEntity<ReportDTO> updateReport(@PathVariable Long id, @RequestBody ReportDTO reportDTO) {
+        ReportDTO updatedReport = reportService.updateReport(id, reportDTO);
+        if (updatedReport != null) {
+            return new ResponseEntity<>(updatedReport, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if the report is not found
     }
 
     // Endpoint to get all reports
@@ -37,14 +47,13 @@ public class ReportController {
         if (reportDTO != null) {
             return new ResponseEntity<>(reportDTO, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Report not found
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if the report is not found
     }
 
     // Endpoint to delete a report by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReport(@PathVariable Long id) {
         reportService.deleteReport(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Successfully deleted
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Return 204 No Content on successful deletion
     }
 }
-

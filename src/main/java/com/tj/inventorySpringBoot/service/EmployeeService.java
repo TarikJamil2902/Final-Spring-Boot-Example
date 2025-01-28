@@ -19,11 +19,28 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    // Method to create or update an employee
-    public EmployeeDTO saveEmployee(EmployeeDTO employeeDTO) {
+    // Method to create a new employee
+    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
         Employee employee = convertToEntity(employeeDTO);
         Employee savedEmployee = employeeRepository.save(employee);
         return convertToDTO(savedEmployee);
+    }
+
+    // Method to update an existing employee
+    public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
+        if (employeeOptional.isPresent()) {
+            Employee employee = employeeOptional.get();
+            employee.setName(employeeDTO.getName());
+            employee.setEmail(employeeDTO.getEmail());
+            employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+            if (employeeDTO.getRole() != null) {
+                employee.setRole(Role.valueOf(employeeDTO.getRole()));
+            }
+            Employee updatedEmployee = employeeRepository.save(employee);
+            return convertToDTO(updatedEmployee);
+        }
+        return null; // Or throw exception if employee not found
     }
 
     // Method to get all employees
@@ -38,7 +55,7 @@ public class EmployeeService {
         if (employeeOptional.isPresent()) {
             return convertToDTO(employeeOptional.get());
         }
-        return null; // Handle this case as a 404 in the controller or throw an exception
+        return null; // Or throw exception
     }
 
     // Method to delete an employee by its ID
@@ -78,4 +95,3 @@ public class EmployeeService {
         return employeeDTO;
     }
 }
-

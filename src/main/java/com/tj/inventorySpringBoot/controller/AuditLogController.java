@@ -1,7 +1,5 @@
 package com.tj.inventorySpringBoot.controller;
 
-
-
 import com.tj.inventorySpringBoot.dto.AuditLogDTO;
 import com.tj.inventorySpringBoot.service.AuditLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,38 +16,37 @@ public class AuditLogController {
     private AuditLogService auditLogService;
 
     // Create a new AuditLog
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<AuditLogDTO> createAuditLog(@RequestBody AuditLogDTO auditLogDTO) {
         AuditLogDTO createdAuditLog = auditLogService.createAuditLog(auditLogDTO);
         return ResponseEntity.ok(createdAuditLog);
     }
 
     // Retrieve all AuditLogs
-    @GetMapping
+    @GetMapping("/get-all")
     public ResponseEntity<List<AuditLogDTO>> getAllAuditLogs() {
         List<AuditLogDTO> auditLogs = auditLogService.getAllAuditLogs();
         return ResponseEntity.ok(auditLogs);
     }
 
     // Retrieve a specific AuditLog by ID
-    @GetMapping("/{id}")
+    @GetMapping("/get-by-id/{id}")
     public ResponseEntity<AuditLogDTO> getAuditLogById(@PathVariable Long id) {
         AuditLogDTO auditLog = auditLogService.getAuditLogById(id);
         return ResponseEntity.ok(auditLog);
     }
 
     // Update an existing AuditLog
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<AuditLogDTO> updateAuditLog(@PathVariable Long id, @RequestBody AuditLogDTO auditLogDTO) {
         AuditLogDTO updatedAuditLog = auditLogService.updateAuditLog(id, auditLogDTO);
         return ResponseEntity.ok(updatedAuditLog);
     }
 
     // Delete an AuditLog by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteAuditLog(@PathVariable Long id) {
         auditLogService.deleteAuditLog(id);
         return ResponseEntity.noContent().build();
     }
 }
-

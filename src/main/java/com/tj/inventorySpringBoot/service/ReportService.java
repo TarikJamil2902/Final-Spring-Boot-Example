@@ -21,13 +21,33 @@ public class ReportService {
     private ReportRepository reportRepository;
 
     @Autowired
-    private UserRepository userRepository; // Assuming you have a User repository to fetch the user who created the report
+    private UserRepository userRepository;
 
-    // Create or update a report
-    public ReportDTO saveReport(ReportDTO reportDTO) {
+    // Create a new report
+    public ReportDTO createReport(ReportDTO reportDTO) {
         Report report = convertToEntity(reportDTO);
         Report savedReport = reportRepository.save(report);
         return convertToDTO(savedReport);
+    }
+
+    // Update an existing report
+    public ReportDTO updateReport(Long id, ReportDTO reportDTO) {
+        Optional<Report> existingReportOptional = reportRepository.findById(id);
+        if (existingReportOptional.isPresent()) {
+            Report existingReport = existingReportOptional.get();
+
+            // Update fields
+            existingReport.setTitle(reportDTO.getTitle());
+            existingReport.setContent(reportDTO.getContent());
+
+            // Update the createdBy user
+            User createdByUser = userRepository.findById(reportDTO.getCreatedByUserId()).orElse(null);
+            existingReport.setCreatedBy(createdByUser);
+
+            Report updatedReport = reportRepository.save(existingReport);
+            return convertToDTO(updatedReport);
+        }
+        return null; // Return null or throw an exception if not found
     }
 
     // Get all reports
@@ -42,7 +62,7 @@ public class ReportService {
         if (reportOptional.isPresent()) {
             return convertToDTO(reportOptional.get());
         }
-        return null; // You can throw an exception or return 404 in the controller
+        return null; // Return null or throw an exception if not found
     }
 
     // Delete a report by its ID
@@ -79,4 +99,3 @@ public class ReportService {
         return reportDTO;
     }
 }
-

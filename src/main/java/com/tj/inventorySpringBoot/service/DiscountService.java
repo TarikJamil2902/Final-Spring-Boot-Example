@@ -23,11 +23,33 @@ public class DiscountService {
     @Autowired
     private OrderRepository orderRepository; // To handle the relationship with Order entities
 
-    // Method to create or update a discount
-    public DiscountDTO saveDiscount(DiscountDTO discountDTO) {
+    // Method to create a new discount
+    public DiscountDTO createDiscount(DiscountDTO discountDTO) {
         Discount discount = convertToEntity(discountDTO);
         Discount savedDiscount = discountRepository.save(discount);
         return convertToDTO(savedDiscount);
+    }
+
+    // Method to update an existing discount
+    public DiscountDTO updateDiscount(Long id, DiscountDTO discountDTO) {
+        Optional<Discount> discountOptional = discountRepository.findById(id);
+        if (discountOptional.isPresent()) {
+            Discount discount = discountOptional.get();
+            discount.setName(discountDTO.getName());
+            discount.setPercentage(discountDTO.getPercentage());
+            discount.setStartDate(discountDTO.getStartDate());
+            discount.setEndDate(discountDTO.getEndDate());
+
+            // Update the related orders if present
+            if (discountDTO.getOrderIds() != null) {
+                List<Order> orders = orderRepository.findAllById(discountDTO.getOrderIds());
+                discount.setOrders(orders);
+            }
+
+            Discount updatedDiscount = discountRepository.save(discount);
+            return convertToDTO(updatedDiscount);
+        }
+        return null;  // Return null or handle as a 404 response in the controller
     }
 
     // Method to get all discounts
@@ -42,7 +64,7 @@ public class DiscountService {
         if (discountOptional.isPresent()) {
             return convertToDTO(discountOptional.get());
         }
-        return null;  // You can throw an exception here or handle it as a 404 in the controller
+        return null;  // Handle as 404 or throw exception in controller
     }
 
     // Method to delete a discount by its ID
@@ -59,7 +81,7 @@ public class DiscountService {
         discount.setStartDate(discountDTO.getStartDate());
         discount.setEndDate(discountDTO.getEndDate());
 
-        // Fetch the related orders by their IDs
+        // Fetch the related orders by their IDs if present
         if (discountDTO.getOrderIds() != null) {
             List<Order> orders = orderRepository.findAllById(discountDTO.getOrderIds());
             discount.setOrders(orders);
@@ -86,4 +108,3 @@ public class DiscountService {
         return discountDTO;
     }
 }
-

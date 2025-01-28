@@ -3,47 +3,56 @@ package com.tj.inventorySpringBoot.controller;
 import com.tj.inventorySpringBoot.dto.OrderDTO;
 import com.tj.inventorySpringBoot.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
-    // Endpoint to create or update an order
+    // Endpoint to create a new order
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrUpdateOrder(@RequestBody OrderDTO orderDTO) {
-        OrderDTO savedOrder = orderService.saveOrder(orderDTO);
-        return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+        OrderDTO createdOrder = orderService.createOrder(orderDTO);
+        return ResponseEntity.ok(createdOrder);
+    }
+
+    // Endpoint to update an existing order
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
+        OrderDTO updatedOrder = orderService.updateOrder(id, orderDTO);
+        if (updatedOrder != null) {
+            return ResponseEntity.ok(updatedOrder);
+        }
+        return ResponseEntity.notFound().build(); // 404 if the order is not found
     }
 
     // Endpoint to get all orders
     @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<OrderDTO> orders = orderService.getAllOrders();
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+        return ResponseEntity.ok(orders);
     }
 
     // Endpoint to get an order by its ID
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
-        OrderDTO orderDTO = orderService.getOrderById(id);
-        if (orderDTO != null) {
-            return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+        OrderDTO order = orderService.getOrderById(id);
+        if (order != null) {
+            return ResponseEntity.ok(order);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.notFound().build(); // 404 if the order is not found
     }
 
     // Endpoint to delete an order by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build(); // 204 No Content on successful deletion
     }
 }

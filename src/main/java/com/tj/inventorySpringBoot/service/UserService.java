@@ -19,11 +19,29 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // Create or update a user
-    public UserDTO saveUser(UserDTO userDTO) {
+    // Create a new user
+    public UserDTO createUser(UserDTO userDTO) {
         User user = convertToEntity(userDTO);
         User savedUser = userRepository.save(user);
         return convertToDTO(savedUser);
+    }
+
+    // Update an existing user
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
+        Optional<User> existingUserOptional = userRepository.findById(id);
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+
+            // Update fields
+            existingUser.setUsername(userDTO.getUsername());
+            existingUser.setRole(Role.valueOf(userDTO.getRole())); // Convert role from string to enum
+            existingUser.setEmail(userDTO.getEmail());
+            existingUser.setPhone(userDTO.getPhone());
+
+            User updatedUser = userRepository.save(existingUser);
+            return convertToDTO(updatedUser);
+        }
+        return null; // Handle not found case as needed
     }
 
     // Get all users
@@ -48,7 +66,7 @@ public class UserService {
         User user = new User();
         user.setId(userDTO.getId());
         user.setUsername(userDTO.getUsername());
-        user.setRole(Role.valueOf(userDTO.getRole()));  // Convert role from string to enum
+        user.setRole(Role.valueOf(userDTO.getRole())); // Convert role from string to enum
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
         return user;
@@ -59,10 +77,9 @@ public class UserService {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
-        userDTO.setRole(user.getRole().toString());  // Convert enum to string
+        userDTO.setRole(user.getRole().toString()); // Convert enum to string
         userDTO.setEmail(user.getEmail());
         userDTO.setPhone(user.getPhone());
         return userDTO;
     }
 }
-

@@ -23,11 +23,30 @@ public class CategoryService {
     @Autowired
     private ProductRepository productRepository; // To handle the relationship with Product
 
-    // Method to create or update a category
-    public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
+    // Method to create a category
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         Category category = convertToEntity(categoryDTO);
         Category savedCategory = categoryRepository.save(category);
         return convertToDTO(savedCategory);
+    }
+
+    // Method to update an existing category
+    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
+        if (categoryOptional.isPresent()) {
+            Category category = categoryOptional.get();
+            category.setName(categoryDTO.getName());
+            category.setDescription(categoryDTO.getDescription());
+
+            // Update the product relationships
+            if (categoryDTO.getProductIds() != null) {
+                List<Product> products = productRepository.findAllById(categoryDTO.getProductIds());
+                category.setProducts(products);
+            }
+            Category updatedCategory = categoryRepository.save(category);
+            return convertToDTO(updatedCategory);
+        }
+        return null; // You can throw an exception here or return a 404 response in the controller
     }
 
     // Method to get all categories
@@ -82,4 +101,3 @@ public class CategoryService {
         return categoryDTO;
     }
 }
-

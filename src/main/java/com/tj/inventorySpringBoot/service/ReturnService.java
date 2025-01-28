@@ -23,15 +23,48 @@ public class ReturnService {
     private ReturnRepository returnRepository;
 
     @Autowired
-    private OrderRepository orderRepository; // To fetch the Order entity by ID
-    @Autowired
-    private PurchaseOrderRepository purchaseOrderRepository; // To fetch the PurchaseOrder entity by ID
+    private OrderRepository orderRepository;
 
-    // Create or update a return record
-    public ReturnDTO saveReturn(ReturnDTO returnDTO) {
+    @Autowired
+    private PurchaseOrderRepository purchaseOrderRepository;
+
+    // Create a new return
+    public ReturnDTO createReturn(ReturnDTO returnDTO) {
         Return returnEntity = convertToEntity(returnDTO);
         Return savedReturn = returnRepository.save(returnEntity);
         return convertToDTO(savedReturn);
+    }
+
+    // Update an existing return
+    public ReturnDTO updateReturn(Long id, ReturnDTO returnDTO) {
+        Optional<Return> existingReturnOptional = returnRepository.findById(id);
+        if (existingReturnOptional.isPresent()) {
+            Return existingReturn = existingReturnOptional.get();
+
+            // Update fields
+            existingReturn.setReason(returnDTO.getReason());
+            existingReturn.setQuantity(returnDTO.getQuantity());
+
+            // Update associated customer order
+            if (returnDTO.getCustomerOrderId() != null) {
+                Order customerOrder = orderRepository.findById(returnDTO.getCustomerOrderId()).orElse(null);
+                existingReturn.setCustomerOrder(customerOrder);
+            } else {
+                existingReturn.setCustomerOrder(null);
+            }
+
+            // Update associated supplier return
+            if (returnDTO.getSupplierReturnId() != null) {
+                PurchaseOrder supplierReturn = purchaseOrderRepository.findById(returnDTO.getSupplierReturnId()).orElse(null);
+                existingReturn.setSupplierReturn(supplierReturn);
+            } else {
+                existingReturn.setSupplierReturn(null);
+            }
+
+            Return updatedReturn = returnRepository.save(existingReturn);
+            return convertToDTO(updatedReturn);
+        }
+        return null; // Return null or throw an exception if not found
     }
 
     // Get all returns
@@ -58,13 +91,13 @@ public class ReturnService {
         returnEntity.setReason(returnDTO.getReason());
         returnEntity.setQuantity(returnDTO.getQuantity());
 
-        // Set the associated order if it exists
+        // Set the associated customer order if it exists
         if (returnDTO.getCustomerOrderId() != null) {
             Order customerOrder = orderRepository.findById(returnDTO.getCustomerOrderId()).orElse(null);
             returnEntity.setCustomerOrder(customerOrder);
         }
 
-        // Set the associated purchase order if it exists
+        // Set the associated supplier return if it exists
         if (returnDTO.getSupplierReturnId() != null) {
             PurchaseOrder supplierReturn = purchaseOrderRepository.findById(returnDTO.getSupplierReturnId()).orElse(null);
             returnEntity.setSupplierReturn(supplierReturn);

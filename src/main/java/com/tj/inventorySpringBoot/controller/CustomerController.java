@@ -16,11 +16,11 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    // Endpoint to create or update a customer
+    // Endpoint to create a new customer
     @PostMapping
-    public ResponseEntity<CustomerDTO> createOrUpdateCustomer(@RequestBody CustomerDTO customerDTO) {
-        CustomerDTO savedCustomer = customerService.saveCustomer(customerDTO);
-        return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
+        CustomerDTO createdCustomer = customerService.createCustomer(customerDTO);
+        return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
     // Endpoint to get all customers
@@ -40,11 +40,20 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    // Endpoint to update an existing customer
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
+        CustomerDTO updatedCustomer = customerService.updateCustomer(id, customerDTO);
+        if (updatedCustomer != null) {
+            return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Return 404 if customer not found
+    }
+
     // Endpoint to delete a customer by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // Return 204 No Content for successful deletion
     }
 }
-

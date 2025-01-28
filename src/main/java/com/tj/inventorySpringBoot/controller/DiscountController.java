@@ -16,11 +16,11 @@ public class DiscountController {
     @Autowired
     private DiscountService discountService;
 
-    // Endpoint to create or update a discount
+    // Endpoint to create a new discount
     @PostMapping
-    public ResponseEntity<DiscountDTO> createOrUpdateDiscount(@RequestBody DiscountDTO discountDTO) {
-        DiscountDTO savedDiscount = discountService.saveDiscount(discountDTO);
-        return new ResponseEntity<>(savedDiscount, HttpStatus.CREATED);
+    public ResponseEntity<DiscountDTO> createDiscount(@RequestBody DiscountDTO discountDTO) {
+        DiscountDTO createdDiscount = discountService.createDiscount(discountDTO);
+        return new ResponseEntity<>(createdDiscount, HttpStatus.CREATED);
     }
 
     // Endpoint to get all discounts
@@ -37,14 +37,23 @@ public class DiscountController {
         if (discountDTO != null) {
             return new ResponseEntity<>(discountDTO, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Return 404 if not found
+    }
+
+    // Endpoint to update an existing discount
+    @PutMapping("/{id}")
+    public ResponseEntity<DiscountDTO> updateDiscount(@PathVariable Long id, @RequestBody DiscountDTO discountDTO) {
+        DiscountDTO updatedDiscount = discountService.updateDiscount(id, discountDTO);
+        if (updatedDiscount != null) {
+            return new ResponseEntity<>(updatedDiscount, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Return 404 if not found
     }
 
     // Endpoint to delete a discount by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDiscount(@PathVariable Long id) {
         discountService.deleteDiscount(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // Return 204 No Content for successful deletion
     }
 }
-

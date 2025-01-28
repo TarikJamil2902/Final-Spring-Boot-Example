@@ -3,7 +3,6 @@ package com.tj.inventorySpringBoot.controller;
 import com.tj.inventorySpringBoot.dto.UserDTO;
 import com.tj.inventorySpringBoot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,35 +15,44 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Endpoint to create or update a user
+    // Create a new user
     @PostMapping
-    public ResponseEntity<UserDTO> createOrUpdateUser(@RequestBody UserDTO userDTO) {
-        UserDTO savedUser = userService.saveUser(userDTO);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        UserDTO createdUser = userService.createUser(userDTO);
+        return ResponseEntity.ok(createdUser);
     }
 
-    // Endpoint to get all users
+    // Update an existing user
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userService.updateUser(id, userDTO);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Get all users
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return ResponseEntity.ok(users);
     }
 
-    // Endpoint to get a user by its ID
+    // Get a user by ID
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         UserDTO userDTO = userService.getUserById(id);
         if (userDTO != null) {
-            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+            return ResponseEntity.ok(userDTO);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Return 404 if not found
+        return ResponseEntity.notFound().build();
     }
 
-    // Endpoint to delete a user by its ID
+    // Delete a user by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // Successfully deleted
+        return ResponseEntity.noContent().build();
     }
 }
-

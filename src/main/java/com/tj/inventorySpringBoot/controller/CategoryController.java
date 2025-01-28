@@ -16,22 +16,29 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    // Endpoint to create or update a category
-    @PostMapping
-    public ResponseEntity<CategoryDTO> createOrUpdateCategory(@RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO savedCategory = categoryService.saveCategory(categoryDTO);
-        return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
+    // Endpoint to create a category
+    @PostMapping("/create")
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
+        return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+    }
+
+    // Endpoint to update a category
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO updatedCategory = categoryService.updateCategory(id, categoryDTO);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
     // Endpoint to get all categories
-    @GetMapping
+    @GetMapping("/get-all")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categories = categoryService.getAllCategories();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     // Endpoint to get a category by its ID
-    @GetMapping("/{id}")
+    @GetMapping("/get-by-id/{id}")
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
         CategoryDTO categoryDTO = categoryService.getCategoryById(id);
         if (categoryDTO != null) {
@@ -41,10 +48,9 @@ public class CategoryController {
     }
 
     // Endpoint to delete a category by its ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-

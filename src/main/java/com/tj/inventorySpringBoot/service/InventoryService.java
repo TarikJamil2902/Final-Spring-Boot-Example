@@ -28,11 +28,35 @@ public class InventoryService {
     @Autowired
     private WarehouseRepository warehouseRepository; // To handle the relationship with Warehouse entity
 
-    // Method to create or update an inventory record
-    public InventoryDTO saveInventory(InventoryDTO inventoryDTO) {
+    // Method to create a new inventory record
+    public InventoryDTO createInventory(InventoryDTO inventoryDTO) {
         Inventory inventory = convertToEntity(inventoryDTO);
         Inventory savedInventory = inventoryRepository.save(inventory);
         return convertToDTO(savedInventory);
+    }
+
+    // Method to update an existing inventory record
+    public InventoryDTO updateInventory(Long id, InventoryDTO inventoryDTO) {
+        Optional<Inventory> inventoryOptional = inventoryRepository.findById(id);
+        if (inventoryOptional.isPresent()) {
+            Inventory inventory = inventoryOptional.get();
+            inventory.setQuantity(inventoryDTO.getQuantity());
+
+            // Update related Product and Warehouse
+            if (inventoryDTO.getProductId() != null) {
+                Product product = productRepository.findById(inventoryDTO.getProductId()).orElse(null);
+                inventory.setProduct(product);
+            }
+
+            if (inventoryDTO.getWarehouseId() != null) {
+                Warehouse warehouse = warehouseRepository.findById(inventoryDTO.getWarehouseId()).orElse(null);
+                inventory.setWarehouse(warehouse);
+            }
+
+            Inventory updatedInventory = inventoryRepository.save(inventory);
+            return convertToDTO(updatedInventory);
+        }
+        return null; // Or throw exception if inventory not found
     }
 
     // Method to get all inventory records
@@ -47,7 +71,7 @@ public class InventoryService {
         if (inventoryOptional.isPresent()) {
             return convertToDTO(inventoryOptional.get());
         }
-        return null; // You can handle this as a 404 in the controller or throw an exception
+        return null; // Or throw exception
     }
 
     // Method to delete an inventory record by its ID
@@ -93,4 +117,3 @@ public class InventoryService {
         return inventoryDTO;
     }
 }
-

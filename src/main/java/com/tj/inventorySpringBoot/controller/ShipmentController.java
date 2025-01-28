@@ -3,7 +3,6 @@ package com.tj.inventorySpringBoot.controller;
 import com.tj.inventorySpringBoot.dto.ShipmentDTO;
 import com.tj.inventorySpringBoot.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,35 +15,44 @@ public class ShipmentController {
     @Autowired
     private ShipmentService shipmentService;
 
-    // Endpoint to create or update a shipment
+    // Create a new shipment
     @PostMapping
-    public ResponseEntity<ShipmentDTO> createOrUpdateShipment(@RequestBody ShipmentDTO shipmentDTO) {
-        ShipmentDTO savedShipment = shipmentService.saveShipment(shipmentDTO);
-        return new ResponseEntity<>(savedShipment, HttpStatus.CREATED);
+    public ResponseEntity<ShipmentDTO> createShipment(@RequestBody ShipmentDTO shipmentDTO) {
+        ShipmentDTO createdShipment = shipmentService.createShipment(shipmentDTO);
+        return ResponseEntity.ok(createdShipment);
     }
 
-    // Endpoint to get all shipments
+    // Update an existing shipment
+    @PutMapping("/{id}")
+    public ResponseEntity<ShipmentDTO> updateShipment(@PathVariable Long id, @RequestBody ShipmentDTO shipmentDTO) {
+        ShipmentDTO updatedShipment = shipmentService.updateShipment(id, shipmentDTO);
+        if (updatedShipment != null) {
+            return ResponseEntity.ok(updatedShipment);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Get all shipments
     @GetMapping
     public ResponseEntity<List<ShipmentDTO>> getAllShipments() {
         List<ShipmentDTO> shipments = shipmentService.getAllShipments();
-        return new ResponseEntity<>(shipments, HttpStatus.OK);
+        return ResponseEntity.ok(shipments);
     }
 
-    // Endpoint to get a shipment by its ID
+    // Get a shipment by ID
     @GetMapping("/{id}")
     public ResponseEntity<ShipmentDTO> getShipmentById(@PathVariable Long id) {
         ShipmentDTO shipmentDTO = shipmentService.getShipmentById(id);
         if (shipmentDTO != null) {
-            return new ResponseEntity<>(shipmentDTO, HttpStatus.OK);
+            return ResponseEntity.ok(shipmentDTO);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if not found
+        return ResponseEntity.notFound().build();
     }
 
-    // Endpoint to delete a shipment by its ID
+    // Delete a shipment by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteShipment(@PathVariable Long id) {
         shipmentService.deleteShipment(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Successfully deleted
+        return ResponseEntity.noContent().build();
     }
 }
-

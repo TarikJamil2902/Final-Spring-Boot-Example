@@ -16,18 +16,28 @@ public class PurchaseOrderItemController {
     @Autowired
     private PurchaseOrderItemService purchaseOrderItemService;
 
-    // Endpoint to create or update a purchase order item
+    // Endpoint to create a new purchase order item
     @PostMapping
-    public ResponseEntity<PurchaseOrderItemDTO> createOrUpdatePurchaseOrderItem(@RequestBody PurchaseOrderItemDTO purchaseOrderItemDTO) {
-        PurchaseOrderItemDTO savedPurchaseOrderItem = purchaseOrderItemService.savePurchaseOrderItem(purchaseOrderItemDTO);
-        return new ResponseEntity<>(savedPurchaseOrderItem, HttpStatus.CREATED);
+    public ResponseEntity<PurchaseOrderItemDTO> createPurchaseOrderItem(@RequestBody PurchaseOrderItemDTO purchaseOrderItemDTO) {
+        PurchaseOrderItemDTO createdPurchaseOrderItem = purchaseOrderItemService.createPurchaseOrderItem(purchaseOrderItemDTO);
+        return new ResponseEntity<>(createdPurchaseOrderItem, HttpStatus.CREATED);
+    }
+
+    // Endpoint to update an existing purchase order item
+    @PutMapping("/{id}")
+    public ResponseEntity<PurchaseOrderItemDTO> updatePurchaseOrderItem(@PathVariable Long id, @RequestBody PurchaseOrderItemDTO purchaseOrderItemDTO) {
+        PurchaseOrderItemDTO updatedPurchaseOrderItem = purchaseOrderItemService.updatePurchaseOrderItem(id, purchaseOrderItemDTO);
+        if (updatedPurchaseOrderItem != null) {
+            return new ResponseEntity<>(updatedPurchaseOrderItem, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Purchase order item not found
     }
 
     // Endpoint to get all purchase order items
     @GetMapping
     public ResponseEntity<List<PurchaseOrderItemDTO>> getAllPurchaseOrderItems() {
-        List<PurchaseOrderItemDTO> purchaseOrderItems = purchaseOrderItemService.getAllPurchaseOrderItems();
-        return new ResponseEntity<>(purchaseOrderItems, HttpStatus.OK);
+        List<PurchaseOrderItemDTO> purchaseOrderItemDTOs = purchaseOrderItemService.getAllPurchaseOrderItems();
+        return new ResponseEntity<>(purchaseOrderItemDTOs, HttpStatus.OK);
     }
 
     // Endpoint to get a purchase order item by its ID
@@ -37,14 +47,13 @@ public class PurchaseOrderItemController {
         if (purchaseOrderItemDTO != null) {
             return new ResponseEntity<>(purchaseOrderItemDTO, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Purchase order item not found
     }
 
     // Endpoint to delete a purchase order item by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePurchaseOrderItem(@PathVariable Long id) {
         purchaseOrderItemService.deletePurchaseOrderItem(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // No content to return
     }
 }
-

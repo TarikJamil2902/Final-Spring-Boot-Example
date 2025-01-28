@@ -18,11 +18,36 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    // Method to create or update a product
-    public ProductDTO saveProduct(ProductDTO productDTO) {
+    // Method to create a new product
+    public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = convertToEntity(productDTO);
         Product savedProduct = productRepository.save(product);
         return convertToDTO(savedProduct);
+    }
+
+    // Method to update an existing product
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            product.setName(productDTO.getName());
+            product.setDescription(productDTO.getDescription());
+            product.setSize(productDTO.getSize());
+            product.setColor(productDTO.getColor());
+            product.setBrand(productDTO.getBrand());
+            product.setPrice(productDTO.getPrice());
+
+            // Update category if provided
+            if (productDTO.getCategoryId() != null) {
+                Category category = new Category();
+                category.setId(productDTO.getCategoryId());
+                product.setCategory(category);
+            }
+
+            Product updatedProduct = productRepository.save(product);
+            return convertToDTO(updatedProduct);
+        }
+        return null; // Return null or throw exception if product is not found
     }
 
     // Method to get all products
@@ -37,7 +62,7 @@ public class ProductService {
         if (productOptional.isPresent()) {
             return convertToDTO(productOptional.get());
         }
-        return null; // You can handle this with exception or return a 404 in controller
+        return null; // Return null or handle with exception
     }
 
     // Method to delete a product by its ID
@@ -55,7 +80,8 @@ public class ProductService {
         product.setColor(productDTO.getColor());
         product.setBrand(productDTO.getBrand());
         product.setPrice(productDTO.getPrice());
-        // Assuming Category is set in DTO, you may need to fetch Category by its ID
+
+        // Set category if available
         if (productDTO.getCategoryId() != null) {
             Category category = new Category();
             category.setId(productDTO.getCategoryId());
@@ -74,6 +100,8 @@ public class ProductService {
         productDTO.setColor(product.getColor());
         productDTO.setBrand(product.getBrand());
         productDTO.setPrice(product.getPrice());
+
+        // Set categoryId from associated category
         if (product.getCategory() != null) {
             productDTO.setCategoryId(product.getCategory().getId());
         }

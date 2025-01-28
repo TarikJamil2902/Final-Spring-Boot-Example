@@ -16,11 +16,21 @@ public class OrderItemController {
     @Autowired
     private OrderItemService orderItemService;
 
-    // Endpoint to create or update an order item
+    // Endpoint to create a new order item
     @PostMapping
-    public ResponseEntity<OrderItemDTO> createOrUpdateOrderItem(@RequestBody OrderItemDTO orderItemDTO) {
-        OrderItemDTO savedOrderItem = orderItemService.saveOrderItem(orderItemDTO);
+    public ResponseEntity<OrderItemDTO> createOrderItem(@RequestBody OrderItemDTO orderItemDTO) {
+        OrderItemDTO savedOrderItem = orderItemService.createOrderItem(orderItemDTO);
         return new ResponseEntity<>(savedOrderItem, HttpStatus.CREATED);
+    }
+
+    // Endpoint to update an existing order item
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderItemDTO> updateOrderItem(@PathVariable Long id, @RequestBody OrderItemDTO orderItemDTO) {
+        OrderItemDTO updatedOrderItem = orderItemService.updateOrderItem(id, orderItemDTO);
+        if (updatedOrderItem != null) {
+            return new ResponseEntity<>(updatedOrderItem, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if order item not found
     }
 
     // Endpoint to get all order items
@@ -30,21 +40,20 @@ public class OrderItemController {
         return new ResponseEntity<>(orderItems, HttpStatus.OK);
     }
 
-    // Endpoint to get an order item by its ID
+    // Endpoint to get an order item by ID
     @GetMapping("/{id}")
     public ResponseEntity<OrderItemDTO> getOrderItemById(@PathVariable Long id) {
         OrderItemDTO orderItemDTO = orderItemService.getOrderItemById(id);
         if (orderItemDTO != null) {
             return new ResponseEntity<>(orderItemDTO, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if order item not found
     }
 
-    // Endpoint to delete an order item by its ID
+    // Endpoint to delete an order item by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrderItem(@PathVariable Long id) {
         orderItemService.deleteOrderItem(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Return 204 No Content for successful deletion
     }
 }
-

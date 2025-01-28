@@ -18,11 +18,28 @@ public class SupplierService {
     @Autowired
     private SupplierRepository supplierRepository;
 
-    // Create or update a supplier
-    public SupplierDTO saveSupplier(SupplierDTO supplierDTO) {
+    // Create a new supplier
+    public SupplierDTO createSupplier(SupplierDTO supplierDTO) {
         Supplier supplier = convertToEntity(supplierDTO);
         Supplier savedSupplier = supplierRepository.save(supplier);
         return convertToDTO(savedSupplier);
+    }
+
+    // Update an existing supplier
+    public SupplierDTO updateSupplier(Long id, SupplierDTO supplierDTO) {
+        Optional<Supplier> existingSupplierOptional = supplierRepository.findById(id);
+        if (existingSupplierOptional.isPresent()) {
+            Supplier existingSupplier = existingSupplierOptional.get();
+
+            // Update the supplier's fields
+            existingSupplier.setName(supplierDTO.getName());
+            existingSupplier.setContact(supplierDTO.getContact());
+            existingSupplier.setAddress(supplierDTO.getAddress());
+
+            Supplier updatedSupplier = supplierRepository.save(existingSupplier);
+            return convertToDTO(updatedSupplier);
+        }
+        return null; // Handle appropriately if the supplier is not found
     }
 
     // Get all suppliers
@@ -62,4 +79,3 @@ public class SupplierService {
         return supplierDTO;
     }
 }
-

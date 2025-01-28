@@ -16,11 +16,21 @@ public class PurchaseOrderController {
     @Autowired
     private PurchaseOrderService purchaseOrderService;
 
-    // Endpoint to create or update a purchase order
+    // Endpoint to create a new purchase order
     @PostMapping
-    public ResponseEntity<PurchaseOrderDTO> createOrUpdatePurchaseOrder(@RequestBody PurchaseOrderDTO purchaseOrderDTO) {
-        PurchaseOrderDTO savedPurchaseOrder = purchaseOrderService.savePurchaseOrder(purchaseOrderDTO);
-        return new ResponseEntity<>(savedPurchaseOrder, HttpStatus.CREATED);
+    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@RequestBody PurchaseOrderDTO purchaseOrderDTO) {
+        PurchaseOrderDTO createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrderDTO);
+        return new ResponseEntity<>(createdPurchaseOrder, HttpStatus.CREATED);
+    }
+
+    // Endpoint to update an existing purchase order
+    @PutMapping("/{id}")
+    public ResponseEntity<PurchaseOrderDTO> updatePurchaseOrder(@PathVariable Long id, @RequestBody PurchaseOrderDTO purchaseOrderDTO) {
+        PurchaseOrderDTO updatedPurchaseOrder = purchaseOrderService.updatePurchaseOrder(id, purchaseOrderDTO);
+        if (updatedPurchaseOrder != null) {
+            return new ResponseEntity<>(updatedPurchaseOrder, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if purchase order not found
     }
 
     // Endpoint to get all purchase orders
@@ -37,13 +47,13 @@ public class PurchaseOrderController {
         if (purchaseOrderDTO != null) {
             return new ResponseEntity<>(purchaseOrderDTO, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if purchase order not found
     }
 
     // Endpoint to delete a purchase order by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePurchaseOrder(@PathVariable Long id) {
         purchaseOrderService.deletePurchaseOrder(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Return 204 No Content on successful deletion
     }
 }

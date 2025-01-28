@@ -3,7 +3,6 @@ package com.tj.inventorySpringBoot.controller;
 import com.tj.inventorySpringBoot.dto.SupplierDTO;
 import com.tj.inventorySpringBoot.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,35 +15,44 @@ public class SupplierController {
     @Autowired
     private SupplierService supplierService;
 
-    // Endpoint to create or update a supplier
+    // Create a new supplier
     @PostMapping
-    public ResponseEntity<SupplierDTO> createOrUpdateSupplier(@RequestBody SupplierDTO supplierDTO) {
-        SupplierDTO savedSupplier = supplierService.saveSupplier(supplierDTO);
-        return new ResponseEntity<>(savedSupplier, HttpStatus.CREATED);
+    public ResponseEntity<SupplierDTO> createSupplier(@RequestBody SupplierDTO supplierDTO) {
+        SupplierDTO createdSupplier = supplierService.createSupplier(supplierDTO);
+        return ResponseEntity.ok(createdSupplier);
     }
 
-    // Endpoint to get all suppliers
+    // Update an existing supplier
+    @PutMapping("/{id}")
+    public ResponseEntity<SupplierDTO> updateSupplier(@PathVariable Long id, @RequestBody SupplierDTO supplierDTO) {
+        SupplierDTO updatedSupplier = supplierService.updateSupplier(id, supplierDTO);
+        if (updatedSupplier != null) {
+            return ResponseEntity.ok(updatedSupplier);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Get all suppliers
     @GetMapping
     public ResponseEntity<List<SupplierDTO>> getAllSuppliers() {
         List<SupplierDTO> suppliers = supplierService.getAllSuppliers();
-        return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        return ResponseEntity.ok(suppliers);
     }
 
-    // Endpoint to get a supplier by its ID
+    // Get a supplier by ID
     @GetMapping("/{id}")
     public ResponseEntity<SupplierDTO> getSupplierById(@PathVariable Long id) {
         SupplierDTO supplierDTO = supplierService.getSupplierById(id);
         if (supplierDTO != null) {
-            return new ResponseEntity<>(supplierDTO, HttpStatus.OK);
+            return ResponseEntity.ok(supplierDTO);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if not found
+        return ResponseEntity.notFound().build();
     }
 
-    // Endpoint to delete a supplier by its ID
+    // Delete a supplier by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSupplier(@PathVariable Long id) {
         supplierService.deleteSupplier(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Successfully deleted
+        return ResponseEntity.noContent().build();
     }
 }
-

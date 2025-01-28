@@ -18,11 +18,27 @@ public class TaxService {
     @Autowired
     private TaxRepository taxRepository;
 
-    // Create or update a tax
-    public TaxDTO saveTax(TaxDTO taxDTO) {
+    // Create a new tax
+    public TaxDTO createTax(TaxDTO taxDTO) {
         Tax tax = convertToEntity(taxDTO);
         Tax savedTax = taxRepository.save(tax);
         return convertToDTO(savedTax);
+    }
+
+    // Update an existing tax
+    public TaxDTO updateTax(Long id, TaxDTO taxDTO) {
+        Optional<Tax> existingTaxOptional = taxRepository.findById(id);
+        if (existingTaxOptional.isPresent()) {
+            Tax existingTax = existingTaxOptional.get();
+
+            // Update the fields of the existing tax
+            existingTax.setName(taxDTO.getName());
+            existingTax.setRate(taxDTO.getRate());
+
+            Tax updatedTax = taxRepository.save(existingTax);
+            return convertToDTO(updatedTax);
+        }
+        return null; // Handle appropriately if the tax is not found
     }
 
     // Get all taxes

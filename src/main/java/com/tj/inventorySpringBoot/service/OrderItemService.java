@@ -23,16 +23,41 @@ public class OrderItemService {
     private OrderItemRepository orderItemRepository;
 
     @Autowired
-    private OrderRepository orderRepository; // To fetch the Order entity by ID
+    private OrderRepository orderRepository;
 
     @Autowired
-    private ProductRepository productRepository; // To fetch the Product entity by ID
+    private ProductRepository productRepository;
 
-    // Method to create or update an order item
-    public OrderItemDTO saveOrderItem(OrderItemDTO orderItemDTO) {
+    // Method to create a new order item
+    public OrderItemDTO createOrderItem(OrderItemDTO orderItemDTO) {
         OrderItem orderItem = convertToEntity(orderItemDTO);
         OrderItem savedOrderItem = orderItemRepository.save(orderItem);
         return convertToDTO(savedOrderItem);
+    }
+
+    // Method to update an existing order item
+    public OrderItemDTO updateOrderItem(Long id, OrderItemDTO orderItemDTO) {
+        Optional<OrderItem> existingOrderItem = orderItemRepository.findById(id);
+        if (existingOrderItem.isPresent()) {
+            OrderItem orderItem = existingOrderItem.get();
+            orderItem.setQuantity(orderItemDTO.getQuantity());
+            orderItem.setPrice(orderItemDTO.getPrice());
+
+            // Update Order and Product if they exist
+            Optional<Order> order = orderRepository.findById(orderItemDTO.getOrderId());
+            Optional<Product> product = productRepository.findById(orderItemDTO.getProductId());
+
+            if (order.isPresent()) {
+                orderItem.setOrder(order.get());
+            }
+            if (product.isPresent()) {
+                orderItem.setProduct(product.get());
+            }
+
+            OrderItem updatedOrderItem = orderItemRepository.save(orderItem);
+            return convertToDTO(updatedOrderItem);
+        }
+        return null; // Or throw exception
     }
 
     // Method to get all order items
@@ -47,7 +72,7 @@ public class OrderItemService {
         if (orderItemOptional.isPresent()) {
             return convertToDTO(orderItemOptional.get());
         }
-        return null; // You can throw an exception or return a 404 in the controller
+        return null; // Or throw exception or return 404 in controller
     }
 
     // Method to delete an order item by its ID
@@ -62,14 +87,12 @@ public class OrderItemService {
         orderItem.setQuantity(orderItemDTO.getQuantity());
         orderItem.setPrice(orderItemDTO.getPrice());
 
-        // Fetch the Order and Product based on IDs from the DTO
+        // Fetch Order and Product
         Optional<Order> order = orderRepository.findById(orderItemDTO.getOrderId());
         Optional<Product> product = productRepository.findById(orderItemDTO.getProductId());
 
-        if (order.isPresent() && product.isPresent()) {
-            orderItem.setOrder(order.get());
-            orderItem.setProduct(product.get());
-        }
+        order.ifPresent(orderItem::setOrder);
+        product.ifPresent(orderItem::setProduct);
 
         return orderItem;
     }
@@ -84,7 +107,6 @@ public class OrderItemService {
         if (orderItem.getOrder() != null) {
             orderItemDTO.setOrderId(orderItem.getOrder().getId());
         }
-
         if (orderItem.getProduct() != null) {
             orderItemDTO.setProductId(orderItem.getProduct().getId());
         }
@@ -92,4 +114,3 @@ public class OrderItemService {
         return orderItemDTO;
     }
 }
-

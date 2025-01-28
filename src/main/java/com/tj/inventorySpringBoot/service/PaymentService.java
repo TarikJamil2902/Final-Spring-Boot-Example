@@ -18,11 +18,27 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    // Save or update a payment
-    public PaymentDTO savePayment(PaymentDTO paymentDTO) {
+    // Method to create a new payment
+    public PaymentDTO createPayment(PaymentDTO paymentDTO) {
         Payment payment = convertToEntity(paymentDTO);
         Payment savedPayment = paymentRepository.save(payment);
         return convertToDTO(savedPayment);
+    }
+
+    // Method to update an existing payment
+    public PaymentDTO updatePayment(Long id, PaymentDTO paymentDTO) {
+        Optional<Payment> paymentOptional = paymentRepository.findById(id);
+        if (paymentOptional.isPresent()) {
+            Payment payment = paymentOptional.get();
+            payment.setAmount(paymentDTO.getAmount());
+            payment.setPaymentMethod(paymentDTO.getPaymentMethod());
+            payment.setPaymentStatus(paymentDTO.getPaymentStatus());
+
+            // Save updated payment
+            Payment updatedPayment = paymentRepository.save(payment);
+            return convertToDTO(updatedPayment);
+        }
+        return null; // Return null if payment is not found (you can handle it in the controller)
     }
 
     // Get all payments
@@ -37,7 +53,7 @@ public class PaymentService {
         if (paymentOptional.isPresent()) {
             return convertToDTO(paymentOptional.get());
         }
-        return null; // You can throw an exception or return 404 in the controller
+        return null; // Return null or handle with an exception
     }
 
     // Delete a payment by its ID
@@ -52,10 +68,6 @@ public class PaymentService {
         payment.setAmount(paymentDTO.getAmount());
         payment.setPaymentMethod(paymentDTO.getPaymentMethod());
         payment.setPaymentStatus(paymentDTO.getPaymentStatus());
-
-        // You can retrieve the associated Order entity if needed
-        // Example: payment.setOrder(orderRepository.findById(paymentDTO.getOrderId()).orElse(null));
-
         return payment;
     }
 
@@ -67,7 +79,7 @@ public class PaymentService {
         paymentDTO.setPaymentMethod(payment.getPaymentMethod());
         paymentDTO.setPaymentStatus(payment.getPaymentStatus());
 
-        // Set the orderId from the associated Order entity
+        // Optionally set orderId if needed
         if (payment.getOrder() != null) {
             paymentDTO.setOrderId(payment.getOrder().getId());
         }
@@ -75,4 +87,3 @@ public class PaymentService {
         return paymentDTO;
     }
 }
-

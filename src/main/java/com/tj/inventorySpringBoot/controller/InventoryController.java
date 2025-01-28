@@ -16,10 +16,10 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
-    // Endpoint to create or update an inventory record
+    // Endpoint to create a new inventory record
     @PostMapping
-    public ResponseEntity<InventoryDTO> createOrUpdateInventory(@RequestBody InventoryDTO inventoryDTO) {
-        InventoryDTO savedInventory = inventoryService.saveInventory(inventoryDTO);
+    public ResponseEntity<InventoryDTO> createInventory(@RequestBody InventoryDTO inventoryDTO) {
+        InventoryDTO savedInventory = inventoryService.createInventory(inventoryDTO);
         return new ResponseEntity<>(savedInventory, HttpStatus.CREATED);
     }
 
@@ -37,14 +37,23 @@ public class InventoryController {
         if (inventoryDTO != null) {
             return new ResponseEntity<>(inventoryDTO, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Return 404 if inventory not found
+    }
+
+    // Endpoint to update an existing inventory record
+    @PutMapping("/{id}")
+    public ResponseEntity<InventoryDTO> updateInventory(@PathVariable Long id, @RequestBody InventoryDTO inventoryDTO) {
+        InventoryDTO updatedInventory = inventoryService.updateInventory(id, inventoryDTO);
+        if (updatedInventory != null) {
+            return new ResponseEntity<>(updatedInventory, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Return 404 if inventory not found
     }
 
     // Endpoint to delete an inventory record by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInventory(@PathVariable Long id) {
         inventoryService.deleteInventory(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // Return 204 No Content for successful deletion
     }
 }
-

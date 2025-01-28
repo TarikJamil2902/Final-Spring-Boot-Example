@@ -21,13 +21,37 @@ public class ShipmentService {
     private ShipmentRepository shipmentRepository;
 
     @Autowired
-    private OrderRepository orderRepository; // To fetch the associated Order by its ID
+    private OrderRepository orderRepository;
 
-    // Create or update a shipment
-    public ShipmentDTO saveShipment(ShipmentDTO shipmentDTO) {
+    // Create a new shipment
+    public ShipmentDTO createShipment(ShipmentDTO shipmentDTO) {
         Shipment shipment = convertToEntity(shipmentDTO);
         Shipment savedShipment = shipmentRepository.save(shipment);
         return convertToDTO(savedShipment);
+    }
+
+    // Update an existing shipment
+    public ShipmentDTO updateShipment(Long id, ShipmentDTO shipmentDTO) {
+        Optional<Shipment> existingShipmentOptional = shipmentRepository.findById(id);
+        if (existingShipmentOptional.isPresent()) {
+            Shipment existingShipment = existingShipmentOptional.get();
+
+            // Update shipment details
+            existingShipment.setTrackingNumber(shipmentDTO.getTrackingNumber());
+            existingShipment.setCarrier(shipmentDTO.getCarrier());
+            existingShipment.setShippedDate(shipmentDTO.getShippedDate());
+            existingShipment.setEstimatedDeliveryDate(shipmentDTO.getEstimatedDeliveryDate());
+
+            // Update associated Order entity if provided
+            if (shipmentDTO.getOrderId() != null) {
+                Order order = orderRepository.findById(shipmentDTO.getOrderId()).orElse(null);
+                existingShipment.setOrder(order);
+            }
+
+            Shipment updatedShipment = shipmentRepository.save(existingShipment);
+            return convertToDTO(updatedShipment);
+        }
+        return null; // Handle appropriately if the shipment is not found
     }
 
     // Get all shipments
@@ -36,7 +60,7 @@ public class ShipmentService {
         return shipments.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    // Get a shipment by its ID
+    // Get a shipment by ID
     public ShipmentDTO getShipmentById(Long id) {
         Optional<Shipment> shipmentOptional = shipmentRepository.findById(id);
         return shipmentOptional.map(this::convertToDTO).orElse(null);
@@ -82,4 +106,3 @@ public class ShipmentService {
         return shipmentDTO;
     }
 }
-
