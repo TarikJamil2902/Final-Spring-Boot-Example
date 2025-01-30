@@ -16,7 +16,7 @@ public class Customer {
     private String address;
 
     @ManyToOne
-    @JoinColumn(name = "created_by_user_id")  // Example of linking to the User entity
+    @JoinColumn  // Reference to userName instead of id
     private User createdBy;
 
     private LocalDateTime createdTime;
@@ -33,6 +33,7 @@ public class Customer {
         this.updatedTime = LocalDateTime.now();
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -96,6 +97,4 @@ public class Customer {
     public void setUpdatedTime(LocalDateTime updatedTime) {
         this.updatedTime = updatedTime;
     }
-
-    // Getters and setters
 }

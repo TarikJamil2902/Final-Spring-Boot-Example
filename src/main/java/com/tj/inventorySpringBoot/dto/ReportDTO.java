@@ -5,7 +5,7 @@ public class ReportDTO {
     private Long id;
     private String title;   // Report title, like "Sales Report", "Inventory Report"
     private String content; // Detailed content or data of the report
-    private Long createdByUserId; // ID of the user who created the report
+    private String createdByUserName; // userName of the user who created the report
 
     // No `createdTime` field, as it's not required in the DTO
 
@@ -33,14 +33,13 @@ public class ReportDTO {
         this.content = content;
     }
 
-    public Long getCreatedByUserId() {
-        return createdByUserId;
+    public String getCreatedByUserName() {
+        return createdByUserName;
     }
 
-    public void setCreatedByUserId(Long createdByUserId) {
-        this.createdByUserId = createdByUserId;
+    public void setCreatedByUserName(String createdByUserName) {
+        this.createdByUserName = createdByUserName;
     }
 
     // Getters and setters
 }
-

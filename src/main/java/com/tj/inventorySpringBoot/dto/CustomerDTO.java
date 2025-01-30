@@ -7,10 +7,9 @@ public class CustomerDTO {
     private String email;
     private String phoneNumber;
     private String address;
-    private Long createdByUserId;  // Reference to the User who created the customer record
+    private String createdByUserName;  // Reference to the userName of the user who created the customer record
 
-    // No `createdTime`, `updatedTime` fields
-
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -51,13 +50,11 @@ public class CustomerDTO {
         this.address = address;
     }
 
-    public Long getCreatedByUserId() {
-        return createdByUserId;
+    public String getCreatedByUserName() {
+        return createdByUserName;
     }
 
-    public void setCreatedByUserId(Long createdByUserId) {
-        this.createdByUserId = createdByUserId;
+    public void setCreatedByUserName(String createdByUserName) {
+        this.createdByUserName = createdByUserName;
     }
-
-    // Getters and setters
 }

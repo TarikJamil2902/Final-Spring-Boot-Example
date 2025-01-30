@@ -5,8 +5,9 @@ public class AuditLogDTO {
     private Long id;
     private String action;  // e.g., "Created Order", "Updated Inventory"
     private String details; // Detailed description of the action
-    private Long userId;    // Reference to the user ID (who performed the action)
+    private String userName; // Reference to the userName (who performed the action)
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -31,13 +32,11 @@ public class AuditLogDTO {
         this.details = details;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
-
-    // Getters and setters
 }

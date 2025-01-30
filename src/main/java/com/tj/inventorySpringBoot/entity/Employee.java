@@ -1,6 +1,5 @@
 package com.tj.inventorySpringBoot.entity;
 
-import com.tj.inventorySpringBoot.enums.Role;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -15,7 +14,9 @@ public class Employee {
     private String email;
     private String phoneNumber;
 
-    @Enumerated(EnumType.STRING)
+    // Many-to-one relationship with Role
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn  // the column in the Employee table that stores the role reference
     private Role role;
 
     private LocalDateTime createdTime;
@@ -32,6 +33,7 @@ public class Employee {
         this.updatedTime = LocalDateTime.now();
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -87,6 +89,4 @@ public class Employee {
     public void setUpdatedTime(LocalDateTime updatedTime) {
         this.updatedTime = updatedTime;
     }
-
-    // Getters and setters
 }

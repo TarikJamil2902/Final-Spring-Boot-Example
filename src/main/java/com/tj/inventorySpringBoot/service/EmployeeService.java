@@ -2,8 +2,9 @@ package com.tj.inventorySpringBoot.service;
 
 import com.tj.inventorySpringBoot.dto.EmployeeDTO;
 import com.tj.inventorySpringBoot.entity.Employee;
-import com.tj.inventorySpringBoot.enums.Role;
+import com.tj.inventorySpringBoot.entity.Role;
 import com.tj.inventorySpringBoot.repository.EmployeeRepository;
+import com.tj.inventorySpringBoot.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,9 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;  // Assuming you have a RoleRepository
 
     // Method to create a new employee
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
@@ -34,9 +38,17 @@ public class EmployeeService {
             employee.setName(employeeDTO.getName());
             employee.setEmail(employeeDTO.getEmail());
             employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+
             if (employeeDTO.getRole() != null) {
-                employee.setRole(Role.valueOf(employeeDTO.getRole()));
+                Optional<Role> roleOptional = roleRepository.findByRoleName(employeeDTO.getRole());  // Fetch role by name
+                if (roleOptional.isPresent()) {
+                    employee.setRole(roleOptional.get());  // Set the Role entity
+                } else {
+                    // Optionally, handle the case when the role does not exist
+                    // You can throw an exception or set a default role
+                }
             }
+
             Employee updatedEmployee = employeeRepository.save(employee);
             return convertToDTO(updatedEmployee);
         }
@@ -71,9 +83,12 @@ public class EmployeeService {
         employee.setEmail(employeeDTO.getEmail());
         employee.setPhoneNumber(employeeDTO.getPhoneNumber());
 
-        // Set the role from String to Enum
+        // Set the role from String to Role entity
         if (employeeDTO.getRole() != null) {
-            employee.setRole(Role.valueOf(employeeDTO.getRole()));
+            Optional<Role> roleOptional = roleRepository.findByRoleName(employeeDTO.getRole());  // Find role by name
+            if (roleOptional.isPresent()) {
+                employee.setRole(roleOptional.get());
+            }
         }
 
         return employee;
@@ -87,9 +102,9 @@ public class EmployeeService {
         employeeDTO.setEmail(employee.getEmail());
         employeeDTO.setPhoneNumber(employee.getPhoneNumber());
 
-        // Set the role as a String representation
+        // Set the role as a String representation (role name)
         if (employee.getRole() != null) {
-            employeeDTO.setRole(employee.getRole().name());
+            employeeDTO.setRole(employee.getRole().getRoleName());  // Assuming the Role entity has a `getRoleName()` method
         }
 
         return employeeDTO;

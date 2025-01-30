@@ -5,13 +5,16 @@ import com.tj.inventorySpringBoot.entity.AuditLog;
 import com.tj.inventorySpringBoot.entity.User;
 import com.tj.inventorySpringBoot.repository.AuditLogRepository;
 import com.tj.inventorySpringBoot.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class AuditLogService {
 
     @Autowired
@@ -22,14 +25,17 @@ public class AuditLogService {
 
     // Create a new AuditLog
     public AuditLogDTO createAuditLog(AuditLogDTO auditLogDTO) {
-        User user = userRepository.findById(auditLogDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + auditLogDTO.getUserId()));
+        // Find the user by userName and throw custom exception if not found
+        User user = userRepository.findById(auditLogDTO.getUserName()) // Changed from getUserId() to getUserName()
+                .orElseThrow(() -> new EntityNotFoundException("User not found with userName: " + auditLogDTO.getUserName()));
 
+        // Create and set up the AuditLog entity
         AuditLog auditLog = new AuditLog();
         auditLog.setAction(auditLogDTO.getAction());
         auditLog.setDetails(auditLogDTO.getDetails());
-        auditLog.setUser(user);
+        // auditLog.setUser(user);
 
+        // Save and return the mapped DTO
         AuditLog savedAuditLog = auditLogRepository.save(auditLog);
         return mapToDTO(savedAuditLog);
     }
@@ -45,7 +51,7 @@ public class AuditLogService {
     // Retrieve a specific AuditLog by ID
     public AuditLogDTO getAuditLogById(Long id) {
         AuditLog auditLog = auditLogRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("AuditLog not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("AuditLog not found with ID: " + id));
         return mapToDTO(auditLog);
     }
 
@@ -55,22 +61,26 @@ public class AuditLogService {
         dto.setId(auditLog.getId());
         dto.setAction(auditLog.getAction());
         dto.setDetails(auditLog.getDetails());
-        dto.setUserId(auditLog.getUser().getId());
+        // dto.setUserName(auditLog.getUser().getUserName()); // Changed from getUserId() to getUserName()
         return dto;
     }
 
     // Update an existing AuditLog
     public AuditLogDTO updateAuditLog(Long id, AuditLogDTO auditLogDTO) {
+        // Find existing AuditLog by ID
         AuditLog auditLog = auditLogRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("AuditLog not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("AuditLog not found with ID: " + id));
 
-        // Update the fields
+        // Update fields in the entity
         auditLog.setAction(auditLogDTO.getAction());
         auditLog.setDetails(auditLogDTO.getDetails());
-        User user = userRepository.findById(auditLogDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + auditLogDTO.getUserId()));
-        auditLog.setUser(user);
 
+        // Find and set the user by userName
+        User user = userRepository.findById(auditLogDTO.getUserName()) // Changed from getUserId() to getUserName()
+                .orElseThrow(() -> new EntityNotFoundException("User not found with userName: " + auditLogDTO.getUserName()));
+        // auditLog.setUser(user);
+
+        // Save the updated AuditLog and return the mapped DTO
         AuditLog updatedAuditLog = auditLogRepository.save(auditLog);
         return mapToDTO(updatedAuditLog);
     }
@@ -78,9 +88,8 @@ public class AuditLogService {
     // Delete an AuditLog by ID
     public void deleteAuditLog(Long id) {
         if (!auditLogRepository.existsById(id)) {
-            throw new RuntimeException("AuditLog not found with ID: " + id);
+            throw new EntityNotFoundException("AuditLog not found with ID: " + id);
         }
         auditLogRepository.deleteById(id);
     }
-
 }

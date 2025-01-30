@@ -1,7 +1,7 @@
 package com.tj.inventorySpringBoot.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 public class AuditLog {
@@ -13,17 +13,17 @@ public class AuditLog {
     private String action; // e.g., "Created Order", "Updated Inventory"
     private String details; // Detailed description of the action
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    // @ManyToOne
+    // private User user; // Reference to the user who performed the action
 
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp; // Using OffsetDateTime for consistency with UTC
 
     @PrePersist
     protected void onCreate() {
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = OffsetDateTime.now(); // Set timestamp to current time
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -48,21 +48,19 @@ public class AuditLog {
         this.details = details;
     }
 
-    public User getUser() {
-        return user;
-    }
+    // public User getUser() {
+    //     return user;
+    // }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    // public void setUser(User user) {
+    //     this.user = user;
+    // }
 
-    public LocalDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
-
-    // Getters and setters
 }

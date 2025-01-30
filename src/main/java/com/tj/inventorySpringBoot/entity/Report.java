@@ -14,7 +14,7 @@ public class Report {
     private String content; // Detailed content or data of the report
 
     @ManyToOne
-    @JoinColumn(name = "created_by_user_id")  // Link to the User entity who created the report
+    @JoinColumn  // Link to the User entity using userName (primary key)
     private User createdBy;
 
     private LocalDateTime createdTime;

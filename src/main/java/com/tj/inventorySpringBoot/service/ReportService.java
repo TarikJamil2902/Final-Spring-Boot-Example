@@ -41,7 +41,7 @@ public class ReportService {
             existingReport.setContent(reportDTO.getContent());
 
             // Update the createdBy user
-            User createdByUser = userRepository.findById(reportDTO.getCreatedByUserId()).orElse(null);
+            User createdByUser = userRepository.findByUserName(reportDTO.getCreatedByUserName()).get();
             existingReport.setCreatedBy(createdByUser);
 
             Report updatedReport = reportRepository.save(existingReport);
@@ -77,8 +77,8 @@ public class ReportService {
         report.setTitle(reportDTO.getTitle());
         report.setContent(reportDTO.getContent());
 
-        // Set the createdBy user from the User repository
-        User createdByUser = userRepository.findById(reportDTO.getCreatedByUserId()).orElse(null);
+        // Set the createdBy user from the User repository based on userName
+        User createdByUser = userRepository.findByUserName(reportDTO.getCreatedByUserName()).get();
         report.setCreatedBy(createdByUser);
 
         return report;
@@ -91,9 +91,9 @@ public class ReportService {
         reportDTO.setTitle(report.getTitle());
         reportDTO.setContent(report.getContent());
 
-        // Set createdByUserId from the createdBy user
+        // Set createdByUserName from the createdBy user
         if (report.getCreatedBy() != null) {
-            reportDTO.setCreatedByUserId(report.getCreatedBy().getId());
+            reportDTO.setCreatedByUserName(report.getCreatedBy().getUserName());
         }
 
         return reportDTO;

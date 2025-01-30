@@ -41,8 +41,8 @@ public class CustomerService {
             customer.setAddress(customerDTO.getAddress());
 
             // Update the user who created this customer if applicable
-            if (customerDTO.getCreatedByUserId() != null) {
-                Optional<User> createdByUser = userRepository.findById(customerDTO.getCreatedByUserId());
+            if (customerDTO.getCreatedByUserName() != null) {
+                Optional<User> createdByUser = userRepository.findByUserName(customerDTO.getCreatedByUserName());
                 createdByUser.ifPresent(customer::setCreatedBy);  // Set the createdBy relationship if the user is found
             }
 
@@ -81,8 +81,8 @@ public class CustomerService {
         customer.setPhoneNumber(customerDTO.getPhoneNumber());
         customer.setAddress(customerDTO.getAddress());
 
-        // Fetch the User who created this customer by ID
-        Optional<User> createdByUser = userRepository.findById(customerDTO.getCreatedByUserId());
+        // Fetch the User who created this customer by userName
+        Optional<User> createdByUser = userRepository.findByUserName(customerDTO.getCreatedByUserName());
         createdByUser.ifPresent(customer::setCreatedBy);  // Set the createdBy relationship if the user is found
 
         return customer;
@@ -97,9 +97,9 @@ public class CustomerService {
         customerDTO.setPhoneNumber(customer.getPhoneNumber());
         customerDTO.setAddress(customer.getAddress());
 
-        // Include the ID of the user who created this customer record
+        // Include the userName of the user who created this customer record
         if (customer.getCreatedBy() != null) {
-            customerDTO.setCreatedByUserId(customer.getCreatedBy().getId());
+            customerDTO.setCreatedByUserName(customer.getCreatedBy().getUserName());
         }
 
         return customerDTO;

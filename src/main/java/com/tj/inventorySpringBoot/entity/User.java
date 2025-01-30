@@ -1,41 +1,84 @@
-package com.tj.inventorySpringBoot.dto;
+package com.tj.inventorySpringBoot.entity;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+
+
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
+@Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class UserDTO {
+@Table(name = "users")
+public class User {
 
-    @Size(max = 255)
+    @Id
+    @Column(nullable = false, name = "user_name")
     private String userName;
 
-    @Size(max = 255)
+    // @OneToMany(mappedBy = "user")
+    // private Set<AuditLog> auditLogs;
+
+    @Column
     private String userFirstName;
 
-    @Size(max = 255)
+    @Column
     private String userLastName;
 
-    @Size(max = 255)
+    @Column
     private String password;
 
-    @NotNull
-    @Size(max = 255)
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column
     private Boolean enabled;
 
+    @Column
     private Boolean credentialsNonExpired;
 
+    @Column
     private Boolean accountNonExpired;
 
+    @Column
     private Boolean accountNonLocked;
 
-    private List<String> roles;
+    @ManyToMany
+    private Set<Role> roles;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private OffsetDateTime dateCreated;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private OffsetDateTime lastUpdated;
+
+    public User(String userName, String email, String password) {
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+    }
+    public User() {
+    }
+
+    @PrePersist
+    void createdAt() {
+        this.dateCreated = this.lastUpdated = OffsetDateTime.now();
+    }
+
+    @PreUpdate
+    void updatedAt() {
+        this.lastUpdated = OffsetDateTime.now();
+    }
 
     public String getUserName() {
         return userName;
@@ -109,11 +152,29 @@ public class UserDTO {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public List<String> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    public OffsetDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(OffsetDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public OffsetDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(OffsetDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+
 }
