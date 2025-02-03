@@ -1,6 +1,7 @@
 package com.tj.inventorySpringBoot.service;
 
 import com.tj.inventorySpringBoot.dto.CategoryDTO;
+import com.tj.inventorySpringBoot.dto.NewCategoryDTO;
 import com.tj.inventorySpringBoot.entity.Category;
 import com.tj.inventorySpringBoot.entity.Product;
 import com.tj.inventorySpringBoot.repository.CategoryRepository;
@@ -8,6 +9,7 @@ import com.tj.inventorySpringBoot.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+
 public class CategoryService {
 
     @Autowired
@@ -24,8 +27,10 @@ public class CategoryService {
     private ProductRepository productRepository; // To handle the relationship with Product
 
     // Method to create a category
-    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        Category category = convertToEntity(categoryDTO);
+    public CategoryDTO createCategory(NewCategoryDTO newCategoryDTO) {
+
+
+        Category category = convertToEntity(newCategoryDTO);
         Category savedCategory = categoryRepository.save(category);
         return convertToDTO(savedCategory);
     }
@@ -85,6 +90,14 @@ public class CategoryService {
         return category;
     }
 
+    private Category convertToEntity(NewCategoryDTO newCategoryDTO) {
+        Category category = new Category();
+        category.setName(newCategoryDTO.getName());
+        category.setDescription(newCategoryDTO.getDescription());
+
+        return category;
+    }
+
     // Convert Category entity to CategoryDTO
     private CategoryDTO convertToDTO(Category category) {
         CategoryDTO categoryDTO = new CategoryDTO();
@@ -93,10 +106,10 @@ public class CategoryService {
         categoryDTO.setDescription(category.getDescription());
 
         // Get product IDs from the associated products
-        List<Long> productIds = category.getProducts().stream()
-                .map(Product::getId)
-                .collect(Collectors.toList());
-        categoryDTO.setProductIds(productIds);
+//        List<Long> productIds = category.getProducts().stream()
+//                .map(Product::getId)
+//                .collect(Collectors.toList());
+//        categoryDTO.setProductIds(productIds);
 
         return categoryDTO;
     }
