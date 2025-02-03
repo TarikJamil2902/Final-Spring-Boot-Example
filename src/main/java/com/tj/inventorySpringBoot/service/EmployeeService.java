@@ -37,7 +37,7 @@ public class EmployeeService {
             Employee employee = employeeOptional.get();
             employee.setName(employeeDTO.getName());
             employee.setEmail(employeeDTO.getEmail());
-            employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+            employee.setPhone(employeeDTO.getPhone());
 
             if (employeeDTO.getRole() != null) {
                 Optional<Role> roleOptional = roleRepository.findByRoleName(employeeDTO.getRole());  // Fetch role by name
@@ -48,6 +48,10 @@ public class EmployeeService {
                     // You can throw an exception or set a default role
                 }
             }
+
+            employee.setHireDate(employeeDTO.getHireDate());
+            employee.setSalary(employeeDTO.getSalary());
+            employee.setStatus(employeeDTO.getStatus());
 
             Employee updatedEmployee = employeeRepository.save(employee);
             return convertToDTO(updatedEmployee);
@@ -78,10 +82,10 @@ public class EmployeeService {
     // Convert EmployeeDTO to Employee entity
     private Employee convertToEntity(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-        employee.setId(employeeDTO.getId());
+        employee.setEmployeeId(employeeDTO.getEmployeeId());
         employee.setName(employeeDTO.getName());
         employee.setEmail(employeeDTO.getEmail());
-        employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+        employee.setPhone(employeeDTO.getPhone());
 
         // Set the role from String to Role entity
         if (employeeDTO.getRole() != null) {
@@ -91,21 +95,29 @@ public class EmployeeService {
             }
         }
 
+        employee.setHireDate(employeeDTO.getHireDate());
+        employee.setSalary(employeeDTO.getSalary());
+        employee.setStatus(employeeDTO.getStatus());
+
         return employee;
     }
 
     // Convert Employee entity to EmployeeDTO
     private EmployeeDTO convertToDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setId(employee.getId());
+        employeeDTO.setEmployeeId(employee.getEmployeeId());
         employeeDTO.setName(employee.getName());
         employeeDTO.setEmail(employee.getEmail());
-        employeeDTO.setPhoneNumber(employee.getPhoneNumber());
+        employeeDTO.setPhone(employee.getPhone());
 
         // Set the role as a String representation (role name)
         if (employee.getRole() != null) {
             employeeDTO.setRole(employee.getRole().getRoleName());  // Assuming the Role entity has a `getRoleName()` method
         }
+
+        employeeDTO.setHireDate(employee.getHireDate());
+        employeeDTO.setSalary(employee.getSalary());
+        employeeDTO.setStatus(employee.getStatus());
 
         return employeeDTO;
     }

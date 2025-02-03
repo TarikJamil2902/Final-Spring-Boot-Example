@@ -17,14 +17,14 @@ public class PurchaseOrderItemController {
     private PurchaseOrderItemService purchaseOrderItemService;
 
     // Endpoint to create a new purchase order item
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<PurchaseOrderItemDTO> createPurchaseOrderItem(@RequestBody PurchaseOrderItemDTO purchaseOrderItemDTO) {
         PurchaseOrderItemDTO createdPurchaseOrderItem = purchaseOrderItemService.createPurchaseOrderItem(purchaseOrderItemDTO);
         return new ResponseEntity<>(createdPurchaseOrderItem, HttpStatus.CREATED);
     }
 
     // Endpoint to update an existing purchase order item
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<PurchaseOrderItemDTO> updatePurchaseOrderItem(@PathVariable Long id, @RequestBody PurchaseOrderItemDTO purchaseOrderItemDTO) {
         PurchaseOrderItemDTO updatedPurchaseOrderItem = purchaseOrderItemService.updatePurchaseOrderItem(id, purchaseOrderItemDTO);
         if (updatedPurchaseOrderItem != null) {
@@ -51,7 +51,7 @@ public class PurchaseOrderItemController {
     }
 
     // Endpoint to delete a purchase order item by its ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deletePurchaseOrderItem(@PathVariable Long id) {
         purchaseOrderItemService.deletePurchaseOrderItem(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // No content to return

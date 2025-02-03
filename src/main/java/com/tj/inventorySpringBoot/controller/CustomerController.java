@@ -17,7 +17,7 @@ public class CustomerController {
     private CustomerService customerService;
 
     // Endpoint to create a new customer
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
         CustomerDTO createdCustomer = customerService.createCustomer(customerDTO);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
@@ -41,7 +41,7 @@ public class CustomerController {
     }
 
     // Endpoint to update an existing customer
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
         CustomerDTO updatedCustomer = customerService.updateCustomer(id, customerDTO);
         if (updatedCustomer != null) {
@@ -51,7 +51,7 @@ public class CustomerController {
     }
 
     // Endpoint to delete a customer by its ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // Return 204 No Content for successful deletion

@@ -1,66 +1,90 @@
 package com.tj.inventorySpringBoot.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class DiscountDTO {
 
-    private Long id;
-    private String name;  // e.g., "Winter Sale"
-    private Double percentage; // Discount percentage
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private List<Long> orderIds; // References to orders (order IDs)
+    private Long discountId; // Primary Key
+    private String discountCode; // Discount code (e.g., "WINTER2025")
+    private String description; // Description of the discount
+    private String discountType; // Discount type (e.g., percentage, fixed amount)
+    private Double amount; // Amount of discount (either percentage or fixed amount)
+    private LocalDateTime validFrom; // Start date of the discount validity
+    private LocalDateTime validUntil; // End date of the discount validity
+    private String status; // Discount status (e.g., active, expired)
+    private String applicableTo; // Applicable to (e.g., product, category)
 
-    public Long getId() {
-        return id;
+    // Getters and Setters
+
+    public Long getDiscountId() {
+        return discountId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDiscountId(Long discountId) {
+        this.discountId = discountId;
     }
 
-    public String getName() {
-        return name;
+    public String getDiscountCode() {
+        return discountCode;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
     }
 
-    public Double getPercentage() {
-        return percentage;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPercentage(Double percentage) {
-        this.percentage = percentage;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public String getDiscountType() {
+        return discountType;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
+    public void setDiscountType(String discountType) {
+        this.discountType = discountType;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
-    public List<Long> getOrderIds() {
-        return orderIds;
+    public LocalDateTime getValidFrom() {
+        return validFrom;
     }
 
-    public void setOrderIds(List<Long> orderIds) {
-        this.orderIds = orderIds;
+    public void setValidFrom(LocalDateTime validFrom) {
+        this.validFrom = validFrom;
     }
-// No `createdTime`, `updatedTime` fields
 
-    // Getters and setters
+    public LocalDateTime getValidUntil() {
+        return validUntil;
+    }
+
+    public void setValidUntil(LocalDateTime validUntil) {
+        this.validUntil = validUntil;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getApplicableTo() {
+        return applicableTo;
+    }
+
+    public void setApplicableTo(String applicableTo) {
+        this.applicableTo = applicableTo;
+    }
 }
-

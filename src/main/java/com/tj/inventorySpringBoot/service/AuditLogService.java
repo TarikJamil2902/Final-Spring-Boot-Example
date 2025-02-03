@@ -9,10 +9,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
 @Transactional
 public class AuditLogService {
@@ -25,15 +23,18 @@ public class AuditLogService {
 
     // Create a new AuditLog
     public AuditLogDTO createAuditLog(AuditLogDTO auditLogDTO) {
-        // Find the user by userName and throw custom exception if not found
-        User user = userRepository.findById(auditLogDTO.getUserName()) // Changed from getUserId() to getUserName()
-                .orElseThrow(() -> new EntityNotFoundException("User not found with userName: " + auditLogDTO.getUserName()));
+        // Find the user by userId (replaced userName with userId)
+        User user = userRepository.findByUserName(auditLogDTO.getUserName())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + auditLogDTO.getUserName()));
 
         // Create and set up the AuditLog entity
         AuditLog auditLog = new AuditLog();
         auditLog.setAction(auditLogDTO.getAction());
-        auditLog.setDetails(auditLogDTO.getDetails());
-        // auditLog.setUser(user);
+        auditLog.setEntity(auditLogDTO.getEntity());
+        auditLog.setEntityId(auditLogDTO.getEntityId());
+        auditLog.setUser(user);  // Setting the user for the audit log
+
+        auditLog.setIpAddress(auditLogDTO.getIpAddress());
 
         // Save and return the mapped DTO
         AuditLog savedAuditLog = auditLogRepository.save(auditLog);
@@ -58,10 +59,14 @@ public class AuditLogService {
     // Helper method to map entity to DTO
     private AuditLogDTO mapToDTO(AuditLog auditLog) {
         AuditLogDTO dto = new AuditLogDTO();
-        dto.setId(auditLog.getId());
+
         dto.setAction(auditLog.getAction());
-        dto.setDetails(auditLog.getDetails());
-        // dto.setUserName(auditLog.getUser().getUserName()); // Changed from getUserId() to getUserName()
+        dto.setEntity(auditLog.getEntity());
+        dto.setEntityId(auditLog.getEntityId());
+
+        dto.setUserName(auditLog.getUser().getUserName()); // Set the username from the User entity
+
+        dto.setIpAddress(auditLog.getIpAddress());
         return dto;
     }
 
@@ -73,12 +78,17 @@ public class AuditLogService {
 
         // Update fields in the entity
         auditLog.setAction(auditLogDTO.getAction());
-        auditLog.setDetails(auditLogDTO.getDetails());
+        auditLog.setEntity(auditLogDTO.getEntity());
+        auditLog.setEntityId(auditLogDTO.getEntityId());
 
-        // Find and set the user by userName
-        User user = userRepository.findById(auditLogDTO.getUserName()) // Changed from getUserId() to getUserName()
-                .orElseThrow(() -> new EntityNotFoundException("User not found with userName: " + auditLogDTO.getUserName()));
-        // auditLog.setUser(user);
+        // Find and set the user by userId (replaced userName with userId)
+        User user = userRepository.findByUserName(auditLogDTO.getUserName())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + auditLogDTO.getUserName()));
+        auditLog.setUser(user);
+
+        // Update timestamp and IP Address
+
+        auditLog.setIpAddress(auditLogDTO.getIpAddress());
 
         // Save the updated AuditLog and return the mapped DTO
         AuditLog updatedAuditLog = auditLogRepository.save(auditLog);
@@ -93,3 +103,4 @@ public class AuditLogService {
         auditLogRepository.deleteById(id);
     }
 }
+

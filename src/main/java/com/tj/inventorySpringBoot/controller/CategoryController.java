@@ -1,7 +1,6 @@
 package com.tj.inventorySpringBoot.controller;
 
 import com.tj.inventorySpringBoot.dto.CategoryDTO;
-import com.tj.inventorySpringBoot.dto.NewCategoryDTO;
 import com.tj.inventorySpringBoot.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +19,16 @@ public class CategoryController {
 
     // Endpoint to create a category
     @PostMapping("/create")
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody NewCategoryDTO newCategoryDTO) {
-        CategoryDTO createdCategory = categoryService.createCategory(newCategoryDTO);
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
 
         return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+    }
+    // Endpoint to get all categories
+    @GetMapping
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        List<CategoryDTO> categories = categoryService.getAllCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     // Endpoint to update a category
@@ -33,12 +38,7 @@ public class CategoryController {
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
-    // Endpoint to get all categories
-    @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        List<CategoryDTO> categories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
-    }
+
 
     // Endpoint to get a category by its ID
     @GetMapping("/{id}")

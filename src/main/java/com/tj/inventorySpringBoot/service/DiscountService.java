@@ -35,16 +35,20 @@ public class DiscountService {
         Optional<Discount> discountOptional = discountRepository.findById(id);
         if (discountOptional.isPresent()) {
             Discount discount = discountOptional.get();
-            discount.setName(discountDTO.getName());
-            discount.setPercentage(discountDTO.getPercentage());
-            discount.setStartDate(discountDTO.getStartDate());
-            discount.setEndDate(discountDTO.getEndDate());
+            discount.setDiscountCode(discountDTO.getDiscountCode());
+            discount.setDescription(discountDTO.getDescription());
+            discount.setDiscountType(discountDTO.getDiscountType());
+            discount.setAmount(discountDTO.getAmount());
+            discount.setValidFrom(discountDTO.getValidFrom());
+            discount.setValidUntil(discountDTO.getValidUntil());
+            discount.setStatus(discountDTO.getStatus());
+            discount.setApplicableTo(discountDTO.getApplicableTo());
 
             // Update the related orders if present
-            if (discountDTO.getOrderIds() != null) {
-                List<Order> orders = orderRepository.findAllById(discountDTO.getOrderIds());
-                discount.setOrders(orders);
-            }
+//            if (discountDTO.getOrderIds() != null) {
+//                List<Order> orders = orderRepository.findAllById(discountDTO.getOrderIds());
+//                discount.setOrders(orders);
+//            }
 
             Discount updatedDiscount = discountRepository.save(discount);
             return convertToDTO(updatedDiscount);
@@ -75,17 +79,21 @@ public class DiscountService {
     // Convert DiscountDTO to Discount entity
     private Discount convertToEntity(DiscountDTO discountDTO) {
         Discount discount = new Discount();
-        discount.setId(discountDTO.getId());
-        discount.setName(discountDTO.getName());
-        discount.setPercentage(discountDTO.getPercentage());
-        discount.setStartDate(discountDTO.getStartDate());
-        discount.setEndDate(discountDTO.getEndDate());
+        discount.setDiscountId(discountDTO.getDiscountId());
+        discount.setDiscountCode(discountDTO.getDiscountCode());
+        discount.setDescription(discountDTO.getDescription());
+        discount.setDiscountType(discountDTO.getDiscountType());
+        discount.setAmount(discountDTO.getAmount());
+        discount.setValidFrom(discountDTO.getValidFrom());
+        discount.setValidUntil(discountDTO.getValidUntil());
+        discount.setStatus(discountDTO.getStatus());
+        discount.setApplicableTo(discountDTO.getApplicableTo());
 
         // Fetch the related orders by their IDs if present
-        if (discountDTO.getOrderIds() != null) {
-            List<Order> orders = orderRepository.findAllById(discountDTO.getOrderIds());
-            discount.setOrders(orders);
-        }
+//        if (discountDTO.getOrderIds() != null) {
+//            List<Order> orders = orderRepository.findAllById(discountDTO.getOrderIds());
+//            discount.setOrders(orders);
+//        }
 
         return discount;
     }
@@ -93,17 +101,21 @@ public class DiscountService {
     // Convert Discount entity to DiscountDTO
     private DiscountDTO convertToDTO(Discount discount) {
         DiscountDTO discountDTO = new DiscountDTO();
-        discountDTO.setId(discount.getId());
-        discountDTO.setName(discount.getName());
-        discountDTO.setPercentage(discount.getPercentage());
-        discountDTO.setStartDate(discount.getStartDate());
-        discountDTO.setEndDate(discount.getEndDate());
+        discountDTO.setDiscountId(discount.getDiscountId());
+        discountDTO.setDiscountCode(discount.getDiscountCode());
+        discountDTO.setDescription(discount.getDescription());
+        discountDTO.setDiscountType(discount.getDiscountType());
+        discountDTO.setAmount(discount.getAmount());
+        discountDTO.setValidFrom(discount.getValidFrom());
+        discountDTO.setValidUntil(discount.getValidUntil());
+        discountDTO.setStatus(discount.getStatus());
+        discountDTO.setApplicableTo(discount.getApplicableTo());
 
         // Include the order IDs in the DTO
-        List<Long> orderIds = discount.getOrders().stream()
-                .map(Order::getId)
-                .collect(Collectors.toList());
-        discountDTO.setOrderIds(orderIds);
+//        List<Long> orderIds = discount.getOrders().stream()
+//                .map(Order::getId)
+//                .collect(Collectors.toList());
+//        discountDTO.setOrderIds(orderIds);
 
         return discountDTO;
     }

@@ -17,7 +17,7 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     // Endpoint to create a new inventory record
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<InventoryDTO> createInventory(@RequestBody InventoryDTO inventoryDTO) {
         InventoryDTO savedInventory = inventoryService.createInventory(inventoryDTO);
         return new ResponseEntity<>(savedInventory, HttpStatus.CREATED);
@@ -41,7 +41,7 @@ public class InventoryController {
     }
 
     // Endpoint to update an existing inventory record
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<InventoryDTO> updateInventory(@PathVariable Long id, @RequestBody InventoryDTO inventoryDTO) {
         InventoryDTO updatedInventory = inventoryService.updateInventory(id, inventoryDTO);
         if (updatedInventory != null) {
@@ -51,7 +51,7 @@ public class InventoryController {
     }
 
     // Endpoint to delete an inventory record by its ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteInventory(@PathVariable Long id) {
         inventoryService.deleteInventory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // Return 204 No Content for successful deletion

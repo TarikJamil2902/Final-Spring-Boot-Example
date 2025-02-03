@@ -1,28 +1,31 @@
 package com.tj.inventorySpringBoot.dto;
 
-import java.util.List;
 
+
+import lombok.Data;
+
+@Data
 public class CategoryDTO {
 
-    private Long id;
-    private String name;
+    private Long categoryId;
+    private String categoryName;
     private String description;
-    private List<Long> productIds; // Reference to product IDs, as you don't want to expose full products
+    private String status;
 
-    public Long getId() {
-        return id;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getName() {
-        return name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getDescription() {
@@ -33,16 +36,11 @@ public class CategoryDTO {
         this.description = description;
     }
 
-    public List<Long> getProductIds() {
-        return productIds;
+    public String getStatus() {
+        return status;
     }
 
-    public void setProductIds(List<Long> productIds) {
-        this.productIds = productIds;
+    public void setStatus(String status) {
+        this.status = status;
     }
-
-    // No `createdTime`, `updatedTime` fields
-
-    // Getters and setters
 }
-

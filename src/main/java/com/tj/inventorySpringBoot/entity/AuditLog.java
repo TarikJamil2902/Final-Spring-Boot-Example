@@ -1,35 +1,37 @@
 package com.tj.inventorySpringBoot.entity;
 
 import jakarta.persistence.*;
-import java.time.OffsetDateTime;
+import lombok.Getter;
+import lombok.Setter;
+
 
 @Entity
-public class AuditLog {
+@Getter
+@Setter
+@Table(name = "audit_logs")
+public class AuditLog extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long auditLogId;
 
-    private String action; // e.g., "Created Order", "Updated Inventory"
-    private String details; // Detailed description of the action
+    private String action;
+    private String entity;
+    private Long entityId;
+    private String ipAddress;
 
-    // @ManyToOne
-    // private User user; // Reference to the user who performed the action
+    @ManyToOne
+    @JoinColumn
+    private User user; // Many-to-one relationship with User entity
 
-    private OffsetDateTime timestamp; // Using OffsetDateTime for consistency with UTC
+    // Getters and Setters
 
-    @PrePersist
-    protected void onCreate() {
-        this.timestamp = OffsetDateTime.now(); // Set timestamp to current time
+    public Long getAuditLogId() {
+        return auditLogId;
     }
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setAuditLogId(Long auditLogId) {
+        this.auditLogId = auditLogId;
     }
 
     public String getAction() {
@@ -40,27 +42,35 @@ public class AuditLog {
         this.action = action;
     }
 
-    public String getDetails() {
-        return details;
+    public String getEntity() {
+        return entity;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setEntity(String entity) {
+        this.entity = entity;
     }
 
-    // public User getUser() {
-    //     return user;
-    // }
-
-    // public void setUser(User user) {
-    //     this.user = user;
-    // }
-
-    public OffsetDateTime getTimestamp() {
-        return timestamp;
+    public Long getEntityId() {
+        return entityId;
     }
 
-    public void setTimestamp(OffsetDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

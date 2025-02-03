@@ -16,14 +16,14 @@ public class PaymentController {
     private PaymentService paymentService;
 
     // Endpoint to create a new payment
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO paymentDTO) {
         PaymentDTO createdPayment = paymentService.createPayment(paymentDTO);
         return ResponseEntity.ok(createdPayment);
     }
 
     // Endpoint to update an existing payment
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<PaymentDTO> updatePayment(@PathVariable Long id, @RequestBody PaymentDTO paymentDTO) {
         PaymentDTO updatedPayment = paymentService.updatePayment(id, paymentDTO);
         if (updatedPayment != null) {
@@ -50,7 +50,7 @@ public class PaymentController {
     }
 
     // Endpoint to delete a payment by its ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
         paymentService.deletePayment(id);
         return ResponseEntity.noContent().build(); // 204 No Content on successful deletion

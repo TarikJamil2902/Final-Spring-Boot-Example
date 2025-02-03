@@ -2,9 +2,7 @@ package com.tj.inventorySpringBoot.service;
 
 import com.tj.inventorySpringBoot.dto.CustomerDTO;
 import com.tj.inventorySpringBoot.entity.Customer;
-import com.tj.inventorySpringBoot.entity.User;
 import com.tj.inventorySpringBoot.repository.CustomerRepository;
-import com.tj.inventorySpringBoot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +18,6 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
-    private UserRepository userRepository;  // To handle the relationship with User entity
-
     // Method to create a new customer
     public CustomerDTO createCustomer(CustomerDTO customerDTO) {
         Customer customer = convertToEntity(customerDTO);
@@ -35,16 +30,15 @@ public class CustomerService {
         Optional<Customer> customerOptional = customerRepository.findById(id);
         if (customerOptional.isPresent()) {
             Customer customer = customerOptional.get();
-            customer.setName(customerDTO.getName());
+            customer.setFirstName(customerDTO.getFirstName());
+            customer.setLastName(customerDTO.getLastName());
             customer.setEmail(customerDTO.getEmail());
-            customer.setPhoneNumber(customerDTO.getPhoneNumber());
-            customer.setAddress(customerDTO.getAddress());
-
-            // Update the user who created this customer if applicable
-            if (customerDTO.getCreatedByUserName() != null) {
-                Optional<User> createdByUser = userRepository.findByUserName(customerDTO.getCreatedByUserName());
-                createdByUser.ifPresent(customer::setCreatedBy);  // Set the createdBy relationship if the user is found
-            }
+            customer.setPhone(customerDTO.getPhone());
+            customer.setBillingAddress(customerDTO.getBillingAddress());
+            customer.setShippingAddress(customerDTO.getShippingAddress());
+            customer.setLoyaltyPoints(customerDTO.getLoyaltyPoints());
+            customer.setCustomerType(customerDTO.getCustomerType());
+            customer.setStatus(customerDTO.getStatus());
 
             Customer updatedCustomer = customerRepository.save(customer);
             return convertToDTO(updatedCustomer);
@@ -69,21 +63,25 @@ public class CustomerService {
 
     // Method to delete a customer by its ID
     public void deleteCustomer(Long id) {
-        customerRepository.deleteById(id);
+        if (customerRepository.existsById(id)) {
+            customerRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Customer not found with ID: " + id);
+        }
     }
 
     // Convert CustomerDTO to Customer entity
     private Customer convertToEntity(CustomerDTO customerDTO) {
         Customer customer = new Customer();
-        customer.setId(customerDTO.getId());
-        customer.setName(customerDTO.getName());
+        customer.setFirstName(customerDTO.getFirstName());
+        customer.setLastName(customerDTO.getLastName());
         customer.setEmail(customerDTO.getEmail());
-        customer.setPhoneNumber(customerDTO.getPhoneNumber());
-        customer.setAddress(customerDTO.getAddress());
-
-        // Fetch the User who created this customer by userName
-        Optional<User> createdByUser = userRepository.findByUserName(customerDTO.getCreatedByUserName());
-        createdByUser.ifPresent(customer::setCreatedBy);  // Set the createdBy relationship if the user is found
+        customer.setPhone(customerDTO.getPhone());
+        customer.setBillingAddress(customerDTO.getBillingAddress());
+        customer.setShippingAddress(customerDTO.getShippingAddress());
+        customer.setLoyaltyPoints(customerDTO.getLoyaltyPoints());
+        customer.setCustomerType(customerDTO.getCustomerType());
+        customer.setStatus(customerDTO.getStatus());
 
         return customer;
     }
@@ -91,16 +89,15 @@ public class CustomerService {
     // Convert Customer entity to CustomerDTO
     private CustomerDTO convertToDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setId(customer.getId());
-        customerDTO.setName(customer.getName());
+        customerDTO.setFirstName(customer.getFirstName());
+        customerDTO.setLastName(customer.getLastName());
         customerDTO.setEmail(customer.getEmail());
-        customerDTO.setPhoneNumber(customer.getPhoneNumber());
-        customerDTO.setAddress(customer.getAddress());
-
-        // Include the userName of the user who created this customer record
-        if (customer.getCreatedBy() != null) {
-            customerDTO.setCreatedByUserName(customer.getCreatedBy().getUserName());
-        }
+        customerDTO.setPhone(customer.getPhone());
+        customerDTO.setBillingAddress(customer.getBillingAddress());
+        customerDTO.setShippingAddress(customer.getShippingAddress());
+        customerDTO.setLoyaltyPoints(customer.getLoyaltyPoints());
+        customerDTO.setCustomerType(customer.getCustomerType());
+        customerDTO.setStatus(customer.getStatus());
 
         return customerDTO;
     }

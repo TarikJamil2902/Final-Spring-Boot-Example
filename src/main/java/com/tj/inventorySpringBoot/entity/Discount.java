@@ -1,99 +1,99 @@
 package com.tj.inventorySpringBoot.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-public class Discount {
+public class Discount extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long discountId; // Primary Key
 
-    private String name; // e.g., "Winter Sale"
-    private Double percentage; // Discount percentage
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private String discountCode; // Discount code (e.g., "WINTER2025")
+    private String description; // Description of the discount
+    private String discountType; // Discount type (e.g., percentage, fixed amount)
+    private Double amount; // Amount of discount (either percentage or fixed amount)
+    private LocalDateTime validFrom; // Start date of the discount validity
+    private LocalDateTime validUntil; // End date of the discount validity
+    private String status; // Discount status (e.g., active, expired)
+    private String applicableTo; // Applicable to (e.g., product, category)
 
-    @OneToMany(mappedBy = "discount") // Ensure this matches the property in the Order entity
-    private List<Order> orders; // Orders where the discount was applied
+    // Getters and Setters
 
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdTime = LocalDateTime.now();
-        this.updatedTime = LocalDateTime.now();
+    public Long getDiscountId() {
+        return discountId;
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedTime = LocalDateTime.now();
+    public void setDiscountId(Long discountId) {
+        this.discountId = discountId;
     }
 
-    public Long getId() {
-        return id;
+    public String getDiscountCode() {
+        return discountCode;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Double getPercentage() {
-        return percentage;
+    public String getDiscountType() {
+        return discountType;
     }
 
-    public void setPercentage(Double percentage) {
-        this.percentage = percentage;
+    public void setDiscountType(String discountType) {
+        this.discountType = discountType;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public LocalDateTime getValidFrom() {
+        return validFrom;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
+    public void setValidFrom(LocalDateTime validFrom) {
+        this.validFrom = validFrom;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public LocalDateTime getValidUntil() {
+        return validUntil;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setValidUntil(LocalDateTime validUntil) {
+        this.validUntil = validUntil;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public String getStatus() {
+        return status;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
+    public String getApplicableTo() {
+        return applicableTo;
     }
 
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
+    public void setApplicableTo(String applicableTo) {
+        this.applicableTo = applicableTo;
     }
 }

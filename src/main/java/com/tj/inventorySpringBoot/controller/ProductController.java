@@ -17,14 +17,14 @@ public class ProductController {
     private ProductService productService;
 
     // Endpoint to create a new product
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         ProductDTO createdProduct = productService.createProduct(productDTO);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
     // Endpoint to update an existing product
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         if (updatedProduct != null) {
@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     // Endpoint to delete a product by its ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // No content to return

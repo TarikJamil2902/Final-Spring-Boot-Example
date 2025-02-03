@@ -1,20 +1,16 @@
 package com.tj.inventorySpringBoot.dto;
 
+import java.time.LocalDateTime;
+
 public class AuditLogDTO {
 
-    private Long id;
-    private String action;  // e.g., "Created Order", "Updated Inventory"
-    private String details; // Detailed description of the action
-    private String userName; // Reference to the userName (who performed the action)
+    private String action;
+    private String entity;
+    private Long entityId;
+    private String ipAddress;
+    private String userName; // Username of the user who performed the action
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Constructor, getters, and setters
 
     public String getAction() {
         return action;
@@ -24,12 +20,28 @@ public class AuditLogDTO {
         this.action = action;
     }
 
-    public String getDetails() {
-        return details;
+    public String getEntity() {
+        return entity;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setEntity(String entity) {
+        this.entity = entity;
+    }
+
+    public Long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public String getUserName() {

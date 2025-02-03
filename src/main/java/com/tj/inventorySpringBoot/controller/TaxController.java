@@ -16,14 +16,14 @@ public class TaxController {
     private TaxService taxService;
 
     // Create a new tax
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<TaxDTO> createTax(@RequestBody TaxDTO taxDTO) {
         TaxDTO createdTax = taxService.createTax(taxDTO);
         return ResponseEntity.ok(createdTax);
     }
 
     // Update an existing tax
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<TaxDTO> updateTax(@PathVariable Long id, @RequestBody TaxDTO taxDTO) {
         TaxDTO updatedTax = taxService.updateTax(id, taxDTO);
         if (updatedTax != null) {
@@ -50,7 +50,7 @@ public class TaxController {
     }
 
     // Delete a tax by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteTax(@PathVariable Long id) {
         taxService.deleteTax(id);
         return ResponseEntity.noContent().build();

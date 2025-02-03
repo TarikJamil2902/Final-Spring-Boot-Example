@@ -16,14 +16,14 @@ public class ReturnController {
     private ReturnService returnService;
 
     // Create a new return
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ReturnDTO> createReturn(@RequestBody ReturnDTO returnDTO) {
         ReturnDTO createdReturn = returnService.createReturn(returnDTO);
         return ResponseEntity.ok(createdReturn);
     }
 
     // Update an existing return by ID
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ReturnDTO> updateReturn(@PathVariable Long id, @RequestBody ReturnDTO returnDTO) {
         ReturnDTO updatedReturn = returnService.updateReturn(id, returnDTO);
         if (updatedReturn != null) {
@@ -50,7 +50,7 @@ public class ReturnController {
     }
 
     // Delete a return by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteReturn(@PathVariable Long id) {
         returnService.deleteReturn(id);
         return ResponseEntity.noContent().build();

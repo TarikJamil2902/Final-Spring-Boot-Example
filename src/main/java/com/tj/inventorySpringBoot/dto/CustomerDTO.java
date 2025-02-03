@@ -1,29 +1,51 @@
 package com.tj.inventorySpringBoot.dto;
 
+
+import com.tj.inventorySpringBoot.enums.CustomerType;
+import com.tj.inventorySpringBoot.enums.Status;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CustomerDTO {
 
-    private Long id;
-    private String name;
+
+
+    private String firstName;
+
+    private String lastName;
+
     private String email;
-    private String phoneNumber;
-    private String address;
-    private String createdByUserName;  // Reference to the userName of the user who created the customer record
 
-    // Getters and setters
-    public Long getId() {
-        return id;
+    private String phone;
+
+    private String billingAddress;
+
+    private String shippingAddress;
+
+    private Integer loyaltyPoints;
+
+    private CustomerType customerType;
+
+    private Status status;
+
+
+
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getName() {
-        return name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -34,27 +56,51 @@ public class CustomerDTO {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getAddress() {
-        return address;
+    public String getBillingAddress() {
+        return billingAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
     }
 
-    public String getCreatedByUserName() {
-        return createdByUserName;
+    public String getShippingAddress() {
+        return shippingAddress;
     }
 
-    public void setCreatedByUserName(String createdByUserName) {
-        this.createdByUserName = createdByUserName;
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public Integer getLoyaltyPoints() {
+        return loyaltyPoints;
+    }
+
+    public void setLoyaltyPoints(Integer loyaltyPoints) {
+        this.loyaltyPoints = loyaltyPoints;
+    }
+
+    public CustomerType getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(CustomerType customerType) {
+        this.customerType = customerType;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

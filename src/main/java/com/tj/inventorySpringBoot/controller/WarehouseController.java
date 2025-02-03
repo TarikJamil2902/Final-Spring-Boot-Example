@@ -16,14 +16,14 @@ public class WarehouseController {
     private WarehouseService warehouseService;
 
     // Create a new warehouse
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<WarehouseDTO> createWarehouse(@RequestBody WarehouseDTO warehouseDTO) {
         WarehouseDTO createdWarehouse = warehouseService.createWarehouse(warehouseDTO);
         return ResponseEntity.ok(createdWarehouse);
     }
 
     // Update an existing warehouse
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<WarehouseDTO> updateWarehouse(@PathVariable Long id, @RequestBody WarehouseDTO warehouseDTO) {
         WarehouseDTO updatedWarehouse = warehouseService.updateWarehouse(id, warehouseDTO);
         if (updatedWarehouse != null) {
@@ -50,7 +50,7 @@ public class WarehouseController {
     }
 
     // Delete a warehouse by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteWarehouse(@PathVariable Long id) {
         warehouseService.deleteWarehouse(id);
         return ResponseEntity.noContent().build();

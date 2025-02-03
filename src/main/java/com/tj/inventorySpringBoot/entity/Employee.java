@@ -4,42 +4,44 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class Employee {
+public class Employee extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long employeeId;
 
     private String name;
     private String email;
-    private String phoneNumber;
+    private String phone;
 
     // Many-to-one relationship with Role
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn  // the column in the Employee table that stores the role reference
+    @JoinColumn(name = "role_id")  // the column in the Employee table that stores the role reference
     private Role role;
 
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+    private LocalDateTime hireDate;
+    private Double salary;
+    private String status;  // e.g., active, on leave
 
     @PrePersist
     protected void onCreate() {
-        this.createdTime = LocalDateTime.now();
-        this.updatedTime = LocalDateTime.now();
+        this.hireDate = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedTime = LocalDateTime.now();
+        // Update the updated time in the parent class
+        super.setUpdatedAt(LocalDateTime.now());
     }
 
-    // Getters and setters
-    public Long getId() {
-        return id;
+    // Getters and Setters
+
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -58,12 +60,12 @@ public class Employee {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Role getRole() {
@@ -74,19 +76,27 @@ public class Employee {
         this.role = role;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getHireDate() {
+        return hireDate;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setHireDate(LocalDateTime hireDate) {
+        this.hireDate = hireDate;
     }
 
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
+    public Double getSalary() {
+        return salary;
     }
 
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -4,33 +4,25 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Entity
-public class Category {
+public class Category extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
     private Long id;
 
+    @Column(name = "category_name", nullable = false)
     private String name;
+
+    @Column
     private String description;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdTime = LocalDateTime.now();
-        this.updatedTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedTime = LocalDateTime.now();
-    }
+    @Column(nullable = false)
+    private String status; // Active or Inactive
 
     public Long getId() {
         return id;
@@ -64,22 +56,14 @@ public class Category {
         this.products = products;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public String getStatus() {
+        return status;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setStatus(String status) {
+        this.status = status;
     }
-
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
-    }
-
-    // Getters and setters
 }
+
+
 

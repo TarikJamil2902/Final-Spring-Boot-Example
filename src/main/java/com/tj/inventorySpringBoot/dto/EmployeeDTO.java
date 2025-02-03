@@ -1,21 +1,26 @@
 package com.tj.inventorySpringBoot.dto;
 
+import java.time.LocalDateTime;
+
 public class EmployeeDTO {
 
-    private Long id;
+    private Long employeeId;
     private String name;
     private String email;
-    private String phoneNumber;
-    private String role;  // Role as a string representation (e.g., "ADMIN", "MANAGER", "EMPLOYEE")
+    private String phone;
+    private String role;  // Role as a string representation (e.g., "WAREHOUSE STAFF", "MANAGER", "SALESPERSON")
+    private LocalDateTime hireDate;
+    private Double salary;
+    private String status;  // e.g., "ACTIVE", "ON LEAVE"
 
-    // No `createdTime`, `updatedTime` fields
+    // Getters and Setters
 
-    public Long getId() {
-        return id;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -34,12 +39,12 @@ public class EmployeeDTO {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getRole() {
@@ -50,6 +55,27 @@ public class EmployeeDTO {
         this.role = role;
     }
 
-    // Getters and setters
-}
+    public LocalDateTime getHireDate() {
+        return hireDate;
+    }
 
+    public void setHireDate(LocalDateTime hireDate) {
+        this.hireDate = hireDate;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}

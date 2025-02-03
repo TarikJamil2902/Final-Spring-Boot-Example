@@ -17,14 +17,14 @@ public class OrderItemController {
     private OrderItemService orderItemService;
 
     // Endpoint to create a new order item
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<OrderItemDTO> createOrderItem(@RequestBody OrderItemDTO orderItemDTO) {
         OrderItemDTO savedOrderItem = orderItemService.createOrderItem(orderItemDTO);
         return new ResponseEntity<>(savedOrderItem, HttpStatus.CREATED);
     }
 
     // Endpoint to update an existing order item
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<OrderItemDTO> updateOrderItem(@PathVariable Long id, @RequestBody OrderItemDTO orderItemDTO) {
         OrderItemDTO updatedOrderItem = orderItemService.updateOrderItem(id, orderItemDTO);
         if (updatedOrderItem != null) {
@@ -51,7 +51,7 @@ public class OrderItemController {
     }
 
     // Endpoint to delete an order item by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteOrderItem(@PathVariable Long id) {
         orderItemService.deleteOrderItem(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Return 204 No Content for successful deletion

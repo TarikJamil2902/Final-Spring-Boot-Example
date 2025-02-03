@@ -1,53 +1,64 @@
 package com.tj.inventorySpringBoot.entity;
 
+import com.tj.inventorySpringBoot.enums.CustomerType;
+import com.tj.inventorySpringBoot.enums.Status;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
+
+
 
 @Entity
-public class Customer {
+@Getter
+@Setter
+public class Customer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long customerId;
 
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
-    private String phoneNumber;
-    private String address;
+    private String phone;
 
-    @ManyToOne
-    @JoinColumn  // Reference to userName instead of id
-    private User createdBy;
+    @Column(length = 500)
+    private String billingAddress;
 
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+    @Column(length = 500)
+    private String shippingAddress;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdTime = LocalDateTime.now();
-        this.updatedTime = LocalDateTime.now();
+    private Integer loyaltyPoints;
+
+    @Enumerated(EnumType.STRING)
+    private CustomerType customerType; // Retail or Wholesale
+
+    @Enumerated(EnumType.STRING)
+    private Status status; // Active or Inactive
+
+
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedTime = LocalDateTime.now();
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    // Getters and setters
-    public Long getId() {
-        return id;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getName() {
-        return name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -58,43 +69,51 @@ public class Customer {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getAddress() {
-        return address;
+    public String getBillingAddress() {
+        return billingAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public String getShippingAddress() {
+        return shippingAddress;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public Integer getLoyaltyPoints() {
+        return loyaltyPoints;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setLoyaltyPoints(Integer loyaltyPoints) {
+        this.loyaltyPoints = loyaltyPoints;
     }
 
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
+    public CustomerType getCustomerType() {
+        return customerType;
     }
 
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
+    public void setCustomerType(CustomerType customerType) {
+        this.customerType = customerType;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

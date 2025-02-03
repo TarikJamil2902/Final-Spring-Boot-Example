@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/audit-logs")
+@RequestMapping("/api/auditlogs")
 public class AuditLogController {
 
     @Autowired
@@ -23,25 +23,26 @@ public class AuditLogController {
     }
 
     // Retrieve all AuditLogs
-    @GetMapping("/get-all")
+    @GetMapping
     public ResponseEntity<List<AuditLogDTO>> getAllAuditLogs() {
         List<AuditLogDTO> auditLogs = auditLogService.getAllAuditLogs();
         return ResponseEntity.ok(auditLogs);
     }
-
-    // Retrieve a specific AuditLog by ID
-    @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<AuditLogDTO> getAuditLogById(@PathVariable Long id) {
-        AuditLogDTO auditLog = auditLogService.getAuditLogById(id);
-        return ResponseEntity.ok(auditLog);
-    }
-
     // Update an existing AuditLog
     @PutMapping("/update/{id}")
     public ResponseEntity<AuditLogDTO> updateAuditLog(@PathVariable Long id, @RequestBody AuditLogDTO auditLogDTO) {
         AuditLogDTO updatedAuditLog = auditLogService.updateAuditLog(id, auditLogDTO);
         return ResponseEntity.ok(updatedAuditLog);
     }
+
+    // Retrieve a specific AuditLog by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<AuditLogDTO> getAuditLogById(@PathVariable Long id) {
+        AuditLogDTO auditLog = auditLogService.getAuditLogById(id);
+        return ResponseEntity.ok(auditLog);
+    }
+
+
 
     // Delete an AuditLog by ID
     @DeleteMapping("/delete/{id}")

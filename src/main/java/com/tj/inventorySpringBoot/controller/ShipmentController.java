@@ -16,14 +16,14 @@ public class ShipmentController {
     private ShipmentService shipmentService;
 
     // Create a new shipment
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ShipmentDTO> createShipment(@RequestBody ShipmentDTO shipmentDTO) {
         ShipmentDTO createdShipment = shipmentService.createShipment(shipmentDTO);
         return ResponseEntity.ok(createdShipment);
     }
 
     // Update an existing shipment
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ShipmentDTO> updateShipment(@PathVariable Long id, @RequestBody ShipmentDTO shipmentDTO) {
         ShipmentDTO updatedShipment = shipmentService.updateShipment(id, shipmentDTO);
         if (updatedShipment != null) {
@@ -50,7 +50,7 @@ public class ShipmentController {
     }
 
     // Delete a shipment by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteShipment(@PathVariable Long id) {
         shipmentService.deleteShipment(id);
         return ResponseEntity.noContent().build();
